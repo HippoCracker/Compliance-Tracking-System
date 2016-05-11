@@ -1,0 +1,60 @@
+// susy setup ----------------------------------------------
+$susy: (
+	columns: 16,
+	container: 1140px,
+	debug: (image: hide),
+	global-box-sizing: border-box
+);
+
+@include border-box-sizing;
+
+
+.wrapper {
+	@include container();
+	min-width: 820px;
+}
+
+
+@media print {
+	#left-table-data,
+	#header,
+	.outer_bar,
+	.fieldset,
+	.case-status-inner,
+	.personal-status-container,
+	.page-level-btn,
+	.close-status-detail-container,
+	#participants-section > .TitleBar,
+	#attachments-section,
+	.contents-btn-group,
+	nav {
+		display: none;
+	}
+
+	#body {
+		padding-top: 0;
+	}
+
+	.page-title {
+		margin-bottom: 10px;
+		border-bottom: 1px solid $black;
+
+		h1 {
+			font-size: 1.2rem;
+		}
+	}
+
+	#participants-section {
+		width: 100%;
+	}
+
+	.members {
+		@include cf;
+		width: 100%;
+
+		.row {
+			float: left;
+			width: 50%;
+		}
+	}
+}

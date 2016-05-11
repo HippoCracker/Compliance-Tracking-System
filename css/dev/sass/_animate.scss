@@ -1,0 +1,41 @@
+button, 
+input, 
+a,
+.radio-btn-group .btn-label,
+.status-head-wrapper {
+	-moz-transition: background .3s;
+	-o-transition: background .3s;
+	-webkit-transition: background .3s;
+	transition: background .3s;
+}
+
+.case-status-detail-wrapper {
+	transition: visibility 0s, opacity 0.5s linear;
+}
+
+.close-status-detail-container {
+	transition: top .3s;
+}
+
+.side-nav-container {
+	transition: right .3s;
+}
+
+.fold-icon {
+	transition: transform .3s ease-in-out;
+	-webkit-transition: transform .3s ease-in-out;
+	-o-transition: transform .3s ease-in-out;
+	-moz-transition: transform .3s ease-in-out;
+}
+
+#fold-icon-container {
+	transition: left .6s, padding .2s, color 1s, box-shadow .8s, border .8s, background .8s;
+}
+
+#left-table-data, #mainbox {
+	transition: padding .1s, left .2s;
+}
+
+.process-top-layer {
+	transition: width 1s;
+}

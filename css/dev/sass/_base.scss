@@ -1,0 +1,344 @@
+@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic');
+@import url("https://fonts.googleapis.com/css?family=Lato:400,700,400italic");
+
+body {
+	font-family: $font-primary;
+	background: #eaeaea url('images/bg.png');
+	-webkit-font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	-ms-font-smoothing: antialiased;
+	-o-font-smoothing: antialiased;
+	font-smoothing: antialiased;
+}
+
+.hidden {
+	display: none;
+}
+//======================== page content background =============
+.main-contents {
+	margin-top: 40px;
+}
+
+.shadow-container {
+	border-radius: $default-border-radius;
+	box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.15);
+	padding: 20px 30px;
+}
+
+.bg-white {
+	background: $darkwhite;
+}
+
+//======================== Layout ==============================
+
+
+
+#MainTable {
+	width: 100%;
+}
+
+.Tabs a {
+	text-decoration: none;
+}
+
+#left-table-data, #mainbox {
+	background-color: transparent;
+}
+
+#left-table-data a,
+#left-table-data span {
+	font-weight: bold;
+}
+
+
+/*
+#left-table-data {
+	position: fixed;
+	height: 100%;
+	min-width: 240px;
+	padding-top: 20px;
+	background: $lightgrey;
+	color: $darkgrey;
+}//left-table-data
+
+*/
+
+#body {
+	padding-top: 65px;
+}
+
+
+// =============================== Float =================================
+
+.f-left {
+	float: left;
+}
+
+.f-right {
+	float: right;
+}
+
+.cf {
+	@include cf;
+}
+
+
+//========================= icon ===================================
+
+
+.fold-icon {
+	display: inline-block;
+	width: 50px;
+	height: 50px;
+	line-height: 40px;
+	text-align: center;
+	font-size: 1.8rem;
+	font-weight: 900;
+	cursor: pointer;
+
+	&:hover {
+		color: $blue;
+	}
+
+	svg {
+		fill: currentColor;
+	}
+
+}//fold-icon
+
+
+// ================================ Color ===============================
+
+
+.normal-status {
+	color: $darkgreen;
+}
+
+.warning-status {
+	color: $yellow;
+}
+
+.dangerous-status {
+	color: rgba(#D60F0F, .8);
+}
+
+// ============================= Input =====================================
+input, span {
+	color: $darkgrey;
+	font-weight: normal;
+}
+
+input.input-text-display {
+	border: none;
+}
+
+span.input-text-display, 
+input.input-text-display, 
+.form-group span.dataEntryReadOnly {
+	display: inline-block;
+	min-width: 170px;
+	margin: 10px;
+	padding: 0 10px;
+	border-bottom: 1px dashed $blue;
+}
+
+span.dataEntryReadOnly,
+span.input-text-display,
+input.input-text-display,
+input.form-control,
+select.form-control {
+	width: 80%;
+	min-height: 20px;
+}
+
+// ============================= Button =====================================
+.page-title-container > .btn-container {
+	position: relative;
+	top: 16px;
+}
+
+button, 
+input[type="button"],
+input[type="submit"] {
+	font-weight: bold;
+	font-size: 1rem;
+	cursor: pointer;
+	border-radius: $default-border-radius;
+}//button, input
+
+
+button[disabled], 
+input[disabled] {
+	background: darken($lightgrey, 10%) !important;
+	cursor: not-allowed;
+	outline: none;
+
+	&:hover {
+		background: darken($lightgrey, 10%);
+	}//hover
+}//button[disabled], input[disabled]
+
+.btn-container {
+	> button {
+		margin: 5px;
+	}
+}
+
+.green-btn {
+	background: $green;
+
+	&:hover {
+		background: darken($green, 10%);
+		color: $white;
+	}//hover
+}//.edit-button
+
+.blue-btn {
+	background: $blue;
+	color: $white;
+
+	&:hover {
+		background: darken($blue, 10%);
+		color: $white;
+	}//hover
+}//blue-btn
+
+.purple-btn {
+	background: #577FD8;
+
+	&:hover {
+		background: darken(#577FD8, 10%);
+		color: $white;
+	}//hover
+}//.review-complete-button
+
+.grey-btn {
+	background: $grey;
+
+	&:hover {
+		background: darken($grey, 10%);
+		color: $white;
+	}//hover
+}//.email-reminder-button
+
+.green-btn,
+.blue-btn,
+.purple-btn,
+.grey-btn {
+	color: $white;
+	border: none;
+}
+
+.btn-shadow {
+	box-shadow: inset 0 0 0 3px rgba(0,0,0,.05),0 1px 3px rgba(0,0,0,.2);
+}
+
+.btn-lg {
+	height: 40px;
+	min-width: 100px;
+	font-size: 1rem;
+	font-weight: bold;
+	margin: 0 5px;
+}
+
+.btn-md {
+	height: 34px;
+	min-width: 74px;
+	font-size: .9rem;
+	font-weight: normal;
+	margin: 0 3px;
+}
+
+
+// ================================ Check Box ===============================
+input[type="checkbox"] {
+	
+}
+
+// ================================ Label ===================================
+label, 
+.label,
+.form-group, label {
+	color: $darkgrey;
+	font-weight: 700;
+}
+
+
+
+
+// ================================ Table ===================================
+
+table {
+	margin: 0 auto;
+
+	thead {
+		border-bottom: 1px solid $grey;
+	}//thead
+
+	tbody {
+		tr {
+			border-radius: $default-border-radius;
+
+		}//tr
+	}//tbody
+
+}//table
+
+
+// ================================ header ===================================
+h2 {
+	font-size: 1.8rem;
+	font-weight: bold;
+	margin: 10px 0;
+	color: lighten($darkgrey, 10%);
+}
+
+
+
+// ================================= Hit Messages ============================
+.hit-messages {
+
+}
+
+.error-message {
+	display: inline-block;
+	height: 24px;
+	line-height: 24px;
+	background: $red;
+	color: $white;
+	font-size: .9rem;
+	padding: 0 5px;
+	display: none;
+	@include border-radius;
+
+	&.is-visible {
+		visibility: visible;
+		@include transition(opacity .2s 0, visibility 0 0);
+	}//is-visible
+}
+h4,
+strong {
+	font-weight: bold;
+}
+
+// =================================== Form ======================================
+.form-group {
+	label {
+		font-size: 1rem;
+	}
+
+	span, 
+	input {
+		font-size: 1.2rem;
+	}
+
+	input,
+	select {
+		margin-top: 5px;
+	}
+}
+
+.form-content.row {
+	margin: 5px 0;
+}

@@ -1,0 +1,24 @@
+{
+  "name": "cits",
+  "description": "Enhance user experience of cits web of gmo",
+  "main": "index.js",
+  "authors": [
+    "zzong"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "cits",
+    "user",
+    "experience",
+    "gmo"
+  ],
+  "moduleType": [],
+  "homepage": "index.html",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
