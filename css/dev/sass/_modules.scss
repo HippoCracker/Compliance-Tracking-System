@@ -1053,11 +1053,10 @@ ul.tabs {
 
 .popout-window {
 	position: relative;
-	top: 30px;
-	width: 80%;
-	margin: 4rem auto;
+	margin: 0 auto;
 	padding: 1.2rem 2rem .8rem;
-	max-width: 700px;
+	max-width: 1000px;
+	min-width: 600px;
 	background: $white;
 	@include border-radius;
 	
@@ -1081,7 +1080,7 @@ ul.tabs {
 		border-bottom: none;
 	}
 
-	section.content {
+	.content {
 		margin-bottom: 1rem;
 		
 		p {
@@ -1141,6 +1140,50 @@ ul.tabs {
 	}//hit
 
 }//popout-window
+
+
+.email-popout {
+	top: 60px;
+	width: 70%;
+	min-width: 600px;
+	max-width: 850px;
+
+	label {
+		color: $grey;
+	}
+
+	section.content {
+		p {
+			font-size: 1rem;
+			font-weight: normal;
+			line-height: 1.2;
+			font-family: $font-primary;
+		}//p
+
+		ul {
+			margin-bottom: 15px;
+			margin-left: 46px;
+			list-style-type: disc;
+
+			li {
+				height: 40px;
+				line-height: 40px;
+			}
+		}
+	}//.content
+
+	.jumbotron {
+		padding: 30px;
+	}
+}//.email-popout
+
+.confirm-popout {
+	top: 120px;
+	width: 60%;
+	min-width: 400px;
+	max-width: 700px;
+}//.confirm-popout
+
 
 // ===============================================================
 // ===============================================================

@@ -84,9 +84,9 @@
         emailPopout.render();
       }
       if (Backbone.workflowTypeId === common.WORKFLOW_TYPE.WorkingGroup) {
-        this._getEmailContent('ComposeIncidentLastCallEmail', callback);
+        this._getEmailContent('ComposeLastCallEmail', callback);
       } else {
-        this._getEmailContent('ComposeIncidentReminderEmail', callback);
+        this._getEmailContent('ComposeReminderEmail', callback);
       }
     },
 

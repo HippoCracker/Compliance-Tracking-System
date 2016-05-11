@@ -51,7 +51,7 @@
 
       if (clickedBtn.id === 'create-workflow-radio') {
         Animation.slide('Down', this.workflowForm, { duration: 400, easing: 'ease-in-out' });
-        Animation.move('#popout-window', { top: -30 });
+        Animation.move('#popout-window', { top: 0 });
         this.$submitBtn.attr('disabled', 'true');
       } else {
         Animation.slide('Up', this.workflowForm, { duration: 400, easing: 'ease-in-out' });
