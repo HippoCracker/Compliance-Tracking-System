@@ -10,11 +10,14 @@
     el: '#confirm-popout-container',
 
     events: {
-      'click #popout-cancel-btn': 'hidePopout',
-      'click #popout-submit-btn': 'sendReviewCompleteRequest',
-      'change .workflow-radio'  : 'switchActiveTag',
-      'change #workflowTypeDropdown': 'changeUIAndFetchParticipants',
-      'change #change-workflow-checkbox': 'toggleWorkflowSection',
+      'click #popout-cancel-btn'          : 'hidePopout',
+      'click #display-email-popout-btn'   : 'hidePopout',
+      'click #popout-submit-btn'          : 'sendReviewCompleteRequest',
+      'click #select-all-checkbox'        : 'toggleRecevierCheckbox',
+      'change .workflow-radio'            : 'switchActiveTag',
+      'change .send-email-checkbox'       : 'toggleSendEmailBtn',
+      'change #workflowTypeDropdown'      : 'changeUIAndFetchParticipants',
+      'change #change-workflow-checkbox'  : 'toggleWorkflowSection',
     },
 
     initialize: function () {
@@ -26,6 +29,7 @@
       this.$alertMessage = $('#alert-message');
       this.workflowRadioBtns = this.$el.find('.workflow-radio');
       this.workflowForm = this.$el.find('#new-workflow-settings-form');
+      this.emailPopoutBtn = document.getElementById('display-email-popout-btn');
     },
 
     render: function () {
@@ -77,7 +81,7 @@
           url: Backbone.siteRootUrl + 'postmortem/getparticipants',
           type: 'post',
           data: {
-            incidentId: Backbone.incidentId,
+            incidentId: Backbone.incident.incidentId,
             workflowTypeId: selectedValue
           },
           success: function (result) {
@@ -115,7 +119,7 @@
       $.ajax({
         type: "POST",
         url: Backbone.siteRootUrl + "PostMortem/ReviewComplete",
-        data: { incidentId: Backbone.incidentId },
+        data: { incidentId: Backbone.incident.incidentId },
         dataType: 'json',
         success: function (result) {
           if (result.err !== void 0) {
@@ -128,6 +132,26 @@
         }
       });
     },
+
+    toggleSendEmailBtn: function () {
+      var length = this.$el.find('.send-email-checkbox:checked').length;
+      if (length === 0) {
+        this.emailPopoutBtn.setAttribute('disabled', 'true');
+      } else {
+        this.emailPopoutBtn.removeAttribute('disabled');
+      }
+    },
+
+    toggleRecevierCheckbox: function (e) {
+      var isSelectAll = $(e.target).is(':checked');
+      var recevierCheckboxes = this.$el.find('.send-email-checkbox');
+      if (isSelectAll) {
+        _.each(recevierCheckboxes, function (checkbox) { checkbox.setAttribute('checked', 'checked'); });
+      } else {
+        _.each(recevierCheckboxes, function (checkbox) { checkbox.removeAttribute('checked'); });
+      }
+      this.toggleSendEmailBtn();
+    }
 
   });
 

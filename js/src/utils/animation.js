@@ -28,6 +28,12 @@
       }
     },
 
+    dimension: function(elem, options) {
+      if (elem && options) {
+        $(elem).velocity(options);
+      }
+    },
+
     reverse: function (elem) {
       if (!elem) return;
       $(elem).velocity('reverse');

@@ -4,31 +4,38 @@
   'backbone'
 ], function ($, _, Backbone) {
 
-  var EmailService = function () {
-
+  var EmailService = function (controller, action) {
+    this.controller = controller;
+    this.action = action;
   }
 
-  EmailService = _.extend(EmailService, {
+  _.extend(EmailService.prototype, {
 
-    controller: 'email',
-
-    connect: function (controller, action) {
-      this.controller = controller,
-      this.action = action;
+    getContent: function (incidentId, workflowTypeId,  callback) {
       var url = this._getUrl();
-      return function (incidentId, workflowTypeId, callback) {
-        $.ajax({
-          type: 'post',
-          url: url,
-          data: { incidentId: incidentId, currentType: workflowTypeId },
-          success: function (result) {
-            if (callback) callback(result);
-          },
-          error: function (error) {
-            console.log(error);
-          }
-        });
-      };
+      $.ajax({
+        type: 'post',
+        url: url,
+        data: { incidentId: incidentId, currentType: workflowTypeId },
+        success: function (data) {
+          if (_.isFunction(callback)) callback(data);
+        },
+        error: function (error) {
+          console.log(error);
+        }
+      });
+    },
+
+    send: function (callback) {
+      var url = this._getUrl();
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: "{'incidentId': '" + incidentId + "', 'receivers': '" + users + "'}",
+        dataType: "html",
+        contentType: "application/json; charset=utf-8",
+        success: callback
+      });
     },
 
     _getUrl: function () {

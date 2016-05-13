@@ -33,7 +33,7 @@
       'click .backtop-btn'    : 'scrollToTop',
       'click #show-popout-btn': 'showPopout',
       'click .edit-btn'       : 'submitEditForm',
-      'click .email-reminder-btn': 'displayEmailPopout'
+      'click .email-reminder-btn': 'displayEmailPopout',
     },
 
     initialize: function () {
@@ -79,24 +79,29 @@
     },
 
     displayEmailPopout: function (e) {
-      var callback = function (result) {
-        var emailPopout = new EmailPopoutView({ model: result });
-        emailPopout.render();
-      }
-      if (Backbone.workflowTypeId === common.WORKFLOW_TYPE.WorkingGroup) {
-        this._getEmailContent('ComposeLastCallEmail', callback);
+      var incidentId = Backbone.incident.incidentId,
+          workflowTypeId = Backbone.incident.workflowTypeId,
+          emailService, emailPopout;
+        
+      if (Backbone.incident.workflowTypeId === common.WORKFLOW_TYPE.WorkingGroup) {
+        emailService = this._getEmailService('email', 'ComposeLastCallEmail');
       } else {
-        this._getEmailContent('ComposeReminderEmail', callback);
+        emailService = this._getEmailService('email', 'ComposeReminderEmail');
       }
+      
+      emailPopout = new EmailPopoutView({
+        model: {
+          emailService: emailService,
+          incidentId: incidentId,
+          workflowTypeId: workflowTypeId
+        }
+      });
     },
 
-    _getEmailContent: function (controllerAction, callback) {
-      var incidentId = Backbone.incidentId;
-      var workflowTypeId = Backbone.workflowTypeId;
-      var connection = EmailService.connect('email', controllerAction);
-      var content = connection(incidentId, workflowTypeId, callback);
-      return content;
+    _getEmailService: function (controller, action) {
+      return new EmailService(controller, action);
     },
+
 
   });
 
