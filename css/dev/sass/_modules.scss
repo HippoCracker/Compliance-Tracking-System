@@ -1148,11 +1148,51 @@ ul.tabs {
 	min-width: 600px;
 	max-width: 850px;
 
-	label {
-		color: $grey;
+	#emailAdditionComments {
+		display: none;
+
+		p {
+			margin: 0;
+		}
 	}
 
+	#email-subject {
+		font-weight: bold;
+	}
+	
+	#email-cc,
+	.error-message {
+		display: none;
+	}
+
+	header {
+		margin-bottom: 14px;
+	}//header
+
+	.form-group {
+		margin-bottom: 8px;
+		input {
+			width: 100%;
+			font-size: .9rem;
+			margin: 0;
+		}//input
+
+		label {
+			color: $grey;
+			margin-top: 8px;
+			padding:0;
+			text-align: right;
+		}//label
+	}//.form-group
+
+	textarea.form-control {
+		resize: none;
+		overflow: auto;
+	}//textarea.form-control
+
+
 	section.content {
+		margin-bottom: 0;
 		p {
 			font-size: 1rem;
 			font-weight: normal;
@@ -1170,10 +1210,11 @@ ul.tabs {
 				line-height: 40px;
 			}
 		}
-	}//.content
+	}//section.content
 
 	.jumbotron {
-		padding: 30px;
+		padding: 30px 30px 10px;
+		margin-bottom: 10px;
 	}
 }//.email-popout
 
