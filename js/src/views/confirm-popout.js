@@ -2,8 +2,9 @@
   'jquery',
   'underscore',
   'backbone',
+  './email-popout',
   '../utils/animation',
-], function ($, _, Backbone, Animation) {
+], function ($, _, Backbone, EmailPopoutView, Animation) {
 
   var PopoutView = Backbone.View.extend({
 
@@ -13,7 +14,8 @@
       'click #popout-cancel-btn'          : 'hidePopout',
       'click #display-email-popout-btn'   : 'hidePopout',
       'click #popout-submit-btn'          : 'sendReviewCompleteRequest',
-      'click #select-all-checkbox'        : 'toggleRecevierCheckbox',
+      'click #select-all-checkbox': 'toggleRecevierCheckbox',
+      'click #create-workflow-btn' : 'createWorkflow',
       'change .workflow-radio'            : 'switchActiveTag',
       'change .send-email-checkbox'       : 'toggleSendEmailBtn',
       'change #workflowTypeDropdown'      : 'changeUIAndFetchParticipants',
@@ -26,7 +28,6 @@
       this.$createWorkflowBtn = $('#create-workflow-btn');
       this.$nextWorkflowCheckbox = $('#change-workflow-checkbox');
       this.$workflowDropdown = $('#workflowTypeDropdown');
-      this.$alertMessage = $('#alert-message');
       this.workflowRadioBtns = this.$el.find('.workflow-radio');
       this.workflowForm = this.$el.find('#new-workflow-settings-form');
       this.emailPopoutBtn = document.getElementById('display-email-popout-btn');
@@ -116,21 +117,41 @@
     },
 
     sendReviewCompleteRequest: function () {
+      var isMoveWorkflow = this.$nextWorkflowCheckbox.is(':checked'),
+          successCallback = this.successReviewComplete.bind(this);
       $.ajax({
         type: "POST",
         url: Backbone.siteRootUrl + "PostMortem/ReviewComplete",
-        data: { incidentId: Backbone.incident.incidentId },
+        data: { incidentId: Backbone.incident.incidentId, isMoveWorkflow: isMoveWorkflow },
         dataType: 'json',
-        success: function (result) {
-          if (result.err !== void 0) {
-            alert(result.err);
-          }
-          if (result.isWorkingGroup) {
-            showEmailPopup("ComposeIncidentReviewCompleteEmail");
-          }
-          window.location.reload();
+        success: function (data) {
+          successCallback(data);
+        },
+        error: function (err) {
+          console.log('error: ' + err);
         }
       });
+    },
+
+    successReviewComplete: function (data) {
+      var incidentId = Backbone.incident.incidentId,
+          workflowTypeId = Backbone.incident.workflowTypeId,
+          emailService,
+          emailPopout;
+
+      emailService = new EmailService('email', 'ComposeReviewCompleteEmail');
+      
+      emailPopout= new EmailPopoutView({
+            model: {
+              emailService: emailService,
+              incidentId: incidentId,
+              workflowTypeId: workflowTypeId
+            }
+          });
+    },
+
+    errorReviewComplete: function(err) {
+
     },
 
     toggleSendEmailBtn: function () {
@@ -151,7 +172,53 @@
         _.each(recevierCheckboxes, function (checkbox) { checkbox.removeAttribute('checked'); });
       }
       this.toggleSendEmailBtn();
-    }
+    },
+
+    createWorkflow: function () {
+      var workflowTypeId = $(this.workflowForm).find('#workflowTypeDropdown').val(),
+          participantsIdentity = $(this.workflowForm).find('#workflow-participants').val(),
+          callback = this.displayAlert.bind(this),
+          incident = Backbone.incident,
+          result;
+
+      $.ajax({
+        type: 'post',
+        url: Backbone.siteRootUrl + 'PostMortem/CreatNewWorkflowAsNext',
+        data: JSON.stringify({
+          incidentId: incident.incidentId,
+          workflowTypeId: workflowTypeId,
+          participants: participantsIdentity
+        }),
+        contentType: 'application/json; charset=utf-8',
+      }).done(function (data) {
+        callback(true, data);
+      }).fail(function (err) {
+        callback(false, err);
+      });
+    },
+
+    displayAlert: function (success, data) {
+      var alertClass, alertContent, nameTags, alertTag;
+
+      if (success) {
+        alertClass = 'alert alert-success';
+        alertMessage = 'Create successfully. Next workflow will be <strong>' + data.workflow.workflowName + '</strong>.';
+
+        nameTags = this.$el.find('.next-workflow-name');
+        nameTags.html(data.workflow.workflowName);
+
+        this.$createWorkflowBtn.attr('disabled', 'true');
+        this.$submitBtn.removeAttr('disabled');
+      } else {
+        alertClass = 'alert alert-danger';
+        alertMessage = '<strong>Error!</strong> ' + data.responseText;
+      }
+
+      alertTag = this.$el.find('#create-workflow-alert-message');
+      alertTag.attr('class', alertClass);
+      alertTag.html(alertMessage);
+
+    },
 
   });
 

@@ -31,8 +31,8 @@
       $.ajax({
         type: "POST",
         url: url,
-        data: "{'incidentId': '" + incidentId + "', 'receivers': '" + users + "'}",
-        dataType: "html",
+        data: { incidentId: incidentId, receivers: users },
+        dataType: "json",
         contentType: "application/json; charset=utf-8",
         success: callback
       });
