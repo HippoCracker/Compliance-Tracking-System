@@ -4,6 +4,7 @@
   'backbone',
   'text!templates/email-popout.html',
   '../utils/animation',
+   'jquery.ui.tagit'
 ], function ($, _, Backbone, emailPopoutTemplate, Animation) {
 
   var EmailPopout = Backbone.View.extend({
@@ -29,6 +30,8 @@
           emailService = this.model.emailService,
           emailInfo, callback;
 
+      var j = jQuery.noConflict();
+
       if (!(emailService && incidentId && workflowTypeId)) {
         throw new Error('EmailPopout initialize - Invalide Arugments');
       }
@@ -40,12 +43,15 @@
       
       emailService.getContent(incidentId, workflowTypeId, callback);
       this.model = emailInfo;
+
+
     },
 
     render: function () {
       this.commentTextArea = document.getElementById('email-user-comment');
       this.toAddressInput = document.getElementById('email-to-address');
       this.insertAndCacheCommentArea();
+      $(this.toAddressInput).tagit();
       this.showPopout();
     },
 

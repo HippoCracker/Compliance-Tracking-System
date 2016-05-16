@@ -3,8 +3,10 @@
   'underscore',
   'backbone',
   './email-popout',
+  '../utils/email-service',
   '../utils/animation',
-], function ($, _, Backbone, EmailPopoutView, Animation) {
+   'jquery.ui.tagit'
+], function ($, _, Backbone, EmailPopoutView, EmailService, Animation) {
 
   var PopoutView = Backbone.View.extend({
 
@@ -56,7 +58,7 @@
 
       if (clickedBtn.id === 'create-workflow-radio') {
         Animation.slide('Down', this.workflowForm, { duration: 400, easing: 'ease-in-out' });
-        Animation.move('#popout-window', { top: 0 });
+        Animation.move('#popout-window', { top: 40 });
         this.$submitBtn.attr('disabled', 'true');
       } else {
         Animation.slide('Up', this.workflowForm, { duration: 400, easing: 'ease-in-out' });
@@ -76,7 +78,8 @@
 
     fetchParticipantsData: function () {
       var selectedValue = Number(this.$workflowDropdown.val());
-      var inputTxt = $('#workflow-participants');
+      var $inputTxt = $('#workflow-participants');
+      
       if (selectedValue !== -1) {
         $.ajax({
           url: Backbone.siteRootUrl + 'postmortem/getparticipants',
@@ -88,17 +91,20 @@
           success: function (result) {
             console.log("success");
             console.log(result);
-            inputTxt.removeAttr('disabled');
-            inputTxt.val(result);
+            $inputTxt.removeAttr('disabled');
+            $inputTxt.val(result);
+            $inputTxt.tagit();
+
           },
           error: function (e) {
             console.log("error");
             console.log(e);
           }
         });
+
       } else {
-        inputTxt.val('');
-        inputTxt.attr('disabled', 'true');
+        $inputTxt.val('');
+        $inputTxt.attr('disabled', 'true');
       }
     },
 

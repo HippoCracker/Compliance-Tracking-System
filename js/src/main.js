@@ -4,12 +4,18 @@
     'underscore': 'libs/underscore/underscore-debug',
     'backbone': 'libs/backbone/backbone-debug',
     'jquery': 'libs/jquery/2.2.3/jquery-debug',
+    'jquery.ui.widget': 'libs/jquery-ui/widget',
+    'jquery.ui.tagit' : 'libs/tag-it/tag-it-debug',
     'velocity': 'libs/velocity/velocity',
     'text': 'node_modules/text/text'
   },
 
+  shim: {
+    'jquery.ui.tagit': ['jquery.ui.widget'],
+  }
+
 });
 
-require(['jquery', 'jquery.ui.widget', 'tagit', 'src/app'], function ($, widget, tagit, App) {
+require(['src/app'], function (App) {
   App.initialize();
 });

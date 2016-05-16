@@ -34,6 +34,7 @@
       'click #show-popout-btn': 'showPopout',
       'click .edit-btn'       : 'submitEditForm',
       'click .email-reminder-btn': 'displayEmailPopout',
+      'click .email-lastcall-btn': 'displayEmailPopout',
     },
 
     initialize: function () {
