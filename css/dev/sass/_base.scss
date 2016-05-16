@@ -4,7 +4,7 @@
 
 body {
 	font-family: $font-primary;
-	background: #eaeaea url('images/bg.png');
+	background: darken($lightgrey, 5%) url('images/bg.png');
 	-webkit-font-smoothing: antialiased;
 	-moz-font-smoothing: antialiased;
 	-ms-font-smoothing: antialiased;
