@@ -155,8 +155,9 @@
           emailService,
           emailPopout;
 
+      this.hidePopout();
+
       emailService = new EmailService('email', 'ComposeReviewCompleteEmail');
-      
       emailPopout= new EmailPopoutView({
             model: {
               emailService: emailService,

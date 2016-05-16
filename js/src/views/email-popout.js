@@ -22,7 +22,6 @@
       'focus #email-user-comment': 'toggleCommentModel',
       'blur #email-user-comment': 'toggleCommentModel',
       'keyup #email-user-comment': 'insertInputToMail'
-
     },
 
     initialize: function () {
@@ -52,10 +51,10 @@
       this.ccAddressInput = document.getElementById('email-cc-address');
       this.userCommentTextArea = document.getElementById('email-user-comment');
 
+      var ccBeforeRemove = this.beforeRemoveUserFromCC.bind(this);
+      this.ccAddressTagit = new Tagit('#email-cc-address', { beforeTagRemoved: ccBeforeRemove });
+      this.toAddressTagit = new Tagit('#email-to-address');
       this.insertAndCacheCommentArea();
-      this.tag = new Tagit({ model: { el: '#email-to-address', context: this } });
-
-      this.displayAsTag(this.ccAddressInput);
       this.showPopout();
     },
 
@@ -141,7 +140,6 @@
       var addBtn = e.target,
           user = Backbone.user,
           $ccInputBox = this.$el.find('#email-cc-address'),
-          ccUsers = $ccInputBox.val(),
           currentUser = user.name + ' [' + user.emailAddress + ']';
 
       if (!(user && user.name && user.emailAddress)) {
@@ -149,10 +147,17 @@
         return;
       }
 
-      ccUsers = ccUsers.concat((ccUsers.length === 0 ? '' : ',') + currentUser);
-      $ccInputBox.val(ccUsers);
-
       addBtn.setAttribute('disabled', 'true');
+
+      this.ccAddressTagit.add(currentUser);
+    },
+
+    beforeRemoveUserFromCC: function(event, ui) {
+      var username = Backbone.user.name;
+      if (ui.tagLabel.indexOf(username) >= 0) {
+        this.$el.find('#cc-me-btn').removeAttr('disabled');
+      }
+      console.log(ui);
     },
 
     showAlert: function (message) {

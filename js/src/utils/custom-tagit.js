@@ -5,26 +5,28 @@
    'jquery.ui.tagit'
 ], function ($, _, Backbone) {
 
-  var CustomTagit = function (elem, context) {
-    this.el = elem;
-    this.context = context;
+  var CustomTagit = function (elem, options) {
+    this.$elem = $(elem);
+    this.$elem.tagit(options);
   };
 
   _.extend(CustomTagit.prototype, {
 
-    
-
-    update: function (values) {
-      var $el = this.$el;
-
-      $el.tagit('remove');
-      values = result.split(',');
-
-      _.each(values, function (value) {
-        $el.tagit('createTag', value);
-      });
+    add: function (values) {
+      if (values && typeof values === 'string') {
+        this._addValueToTag(values);
+      }
     },
 
+    _addValueToTag: function(values) {
+      var $elem = this.$elem;
+
+      values = values.split(',');
+      _.each(values, function (value) {
+        $elem.tagit('createTag', value);
+      });
+
+    },
   });
 
   return CustomTagit;
