@@ -16,6 +16,8 @@
 
 });
 
-require(['src/app'], function (App) {
+require(['jquery', 'src/app'], function ($, App) {
+  var j = jQuery.noConflict(true);
+
   App.initialize();
 });

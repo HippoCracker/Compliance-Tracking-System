@@ -33,6 +33,8 @@
       this.workflowRadioBtns = this.$el.find('.workflow-radio');
       this.workflowForm = this.$el.find('#new-workflow-settings-form');
       this.emailPopoutBtn = document.getElementById('display-email-popout-btn');
+      this.$participantNameTxt = $('#workflow-participants');
+      this.$participantNameTxt.tagit();
     },
 
     render: function () {
@@ -58,7 +60,7 @@
 
       if (clickedBtn.id === 'create-workflow-radio') {
         Animation.slide('Down', this.workflowForm, { duration: 400, easing: 'ease-in-out' });
-        Animation.move('#popout-window', { top: 40 });
+        Animation.move('#popout-window', { top: 0 });
         this.$submitBtn.attr('disabled', 'true');
       } else {
         Animation.slide('Up', this.workflowForm, { duration: 400, easing: 'ease-in-out' });
@@ -77,8 +79,8 @@
     },
 
     fetchParticipantsData: function () {
+      var $participantNameTxt = this.$participantNameTxt;
       var selectedValue = Number(this.$workflowDropdown.val());
-      var $inputTxt = $('#workflow-participants');
       
       if (selectedValue !== -1) {
         $.ajax({
@@ -91,9 +93,13 @@
           success: function (result) {
             console.log("success");
             console.log(result);
-            $inputTxt.removeAttr('disabled');
-            $inputTxt.val(result);
-            $inputTxt.tagit();
+            $participantNameTxt.removeAttr('disabled');
+
+            $participantNameTxt.tagit('removeAll');
+            var participants = result.split(',');
+            _.each(participants, function (participant) {
+              $participantNameTxt.tagit('createTag', participant);
+            });
 
           },
           error: function (e) {
@@ -109,8 +115,8 @@
     },
 
     changeUIAndFetchParticipants: function () {
-      this.changeFormUI();
       this.fetchParticipantsData();
+      this.changeFormUI();
     },
 
     toggleWorkflowSection: function () {
@@ -131,7 +137,11 @@
         data: { incidentId: Backbone.incident.incidentId, isMoveWorkflow: isMoveWorkflow },
         dataType: 'json',
         success: function (data) {
-          successCallback(data);
+          if (data.isMoveWorkflow) {
+            window.location.reload();
+          } else {
+            successCallback(data);
+          }
         },
         error: function (err) {
           console.log('error: ' + err);

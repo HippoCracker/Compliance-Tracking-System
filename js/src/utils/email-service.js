@@ -11,6 +11,10 @@
 
   _.extend(EmailService.prototype, {
 
+    getSendEmailUrl: function() {
+      return Backbone.siteRootUrl + 'email/sendemail';
+    },
+
     getContent: function (incidentId, workflowTypeId,  callback) {
       var url = this._getUrl();
       $.ajax({
@@ -26,15 +30,27 @@
       });
     },
 
-    send: function (callback) {
-      var url = this._getUrl();
+    send: function (incidentId, emailData, callback) {
+      var url = this.getSendEmailUrl();
+
+      if (emailData.SystemMessageBody !== void 0) {
+        delete emailData.SystemMessageBody;
+      };
+
       $.ajax({
         type: "POST",
         url: url,
-        data: { incidentId: incidentId, receivers: users },
-        dataType: "json",
-        contentType: "application/json; charset=utf-8",
-        success: callback
+        data: emailData,
+        success: function (result) {
+          console.log('success: ' + result);
+
+          if (typeof callback === 'function') {
+            callback(result);
+          }
+        },
+        error: function (err) {
+          console.log('err:' + err);
+        }
       });
     },
 
