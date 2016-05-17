@@ -54,10 +54,38 @@
       });
     },
 
+    displayEmailPopout: function (toUsers) {
+      if (!toUsers || typeof toUser !== 'string') return void 0;
+
+      var incidentId = Backbone.incident.incidentId,
+          workflowTypeId = Backbone.incident.workflowTypeId,
+          emailService, emailPopout;
+
+
+      if (Backbone.incident.workflowTypeId === common.WORKFLOW_TYPE.WorkingGroup) {
+        emailService = this._getEmailService('email', 'ComposeLastCallEmail');
+      } else {
+        emailService = this._getEmailService('email', 'ComposeReminderEmail');
+      }
+
+      emailPopout = new EmailPopoutView({
+        model: {
+          emailService: emailService,
+          incidentId: incidentId,
+          workflowTypeId: workflowTypeId
+        }
+      });
+
+      return emailPopout;
+    },
+
     _getUrl: function () {
       return Backbone.siteRootUrl + this.controller + '/' + this.action;
     },
 
+    _getEmailService: function (controller, action) {
+      return new EmailService(controller, action);
+    },
 
   });
 

@@ -46,7 +46,6 @@
 
     render: function () {
       this.pageNav.render();
-      this.popout.render();
     },
 
     submitEditForm: function() {
@@ -90,7 +89,7 @@
         emailService = this._getEmailService('email', 'ComposeReminderEmail');
       }
       
-      emailPopout = new EmailPopoutView({
+      this.emailPopout = new EmailPopoutView({
         model: {
           emailService: emailService,
           incidentId: incidentId,

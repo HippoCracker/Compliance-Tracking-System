@@ -5,8 +5,8 @@
   './email-popout',
   '../utils/email-service',
   '../utils/animation',
-   'jquery.ui.tagit'
-], function ($, _, Backbone, EmailPopoutView, EmailService, Animation) {
+  '../utils/custom-tagit',
+], function ($, _, Backbone, EmailPopoutView, EmailService, Animation, Tagit) {
 
   var PopoutView = Backbone.View.extend({
 
@@ -33,8 +33,7 @@
       this.workflowRadioBtns = this.$el.find('.workflow-radio');
       this.workflowForm = this.$el.find('#new-workflow-settings-form');
       this.emailPopoutBtn = document.getElementById('display-email-popout-btn');
-      this.$participantNameTxt = $('#workflow-participants');
-      this.$participantNameTxt.tagit();
+      this.participantsTagit = new Tagit('#workflow-participants');
     },
 
     render: function () {
@@ -72,14 +71,17 @@
     changeFormUI: function () {
       var selectedValue = Number(this.$workflowDropdown.val());
       if (selectedValue === -1) {
+        this.participantsTagit.disable();
         this.$createWorkflowBtn.attr('disabled', 'true');
       } else {
+        this.participantsTagit.enable();
+        this.participantsTagit.update();
         this.$createWorkflowBtn.removeAttr('disabled');
       }
     },
 
     fetchParticipantsData: function () {
-      var $participantNameTxt = this.$participantNameTxt;
+      var participantsTagit = this.participantsTagit;
       var selectedValue = Number(this.$workflowDropdown.val());
       
       if (selectedValue !== -1) {
@@ -93,12 +95,10 @@
           success: function (result) {
             console.log("success");
             console.log(result);
-            $participantNameTxt.removeAttr('disabled');
-
-            $participantNameTxt.tagit('removeAll');
+            participantsTagit.clear();
             var participants = result.split(',');
             _.each(participants, function (participant) {
-              $participantNameTxt.tagit('createTag', participant);
+              participantsTagit.add(participant);
             });
 
           },
@@ -108,10 +108,7 @@
           }
         });
 
-      } else {
-        $inputTxt.val('');
-        $inputTxt.attr('disabled', 'true');
-      }
+      } 
     },
 
     changeUIAndFetchParticipants: function () {

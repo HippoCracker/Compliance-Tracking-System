@@ -5,7 +5,6 @@
   'text!templates/email-popout.html',
   '../utils/animation',
   '../utils/custom-tagit',
-   'jquery.ui.tagit'
 ], function ($, _, Backbone, emailPopoutTemplate, Animation, Tagit) {
 
   var EmailPopout = Backbone.View.extend({
@@ -70,40 +69,6 @@
 
     showPopout: function () {
       this.$el.fadeIn("fast");
-    },
-
-    displayAsTag: function(elem) {
-      $(elem).tagit({
-        allowSpaces: true,
-        maxTags: 5,
-        tagSource: function (request, response) {
-          $.ajax({
-            type: "POST",
-            url: Backbone.siteRootUrl + 'Email/FetchEmailList',
-            data: "{'nameStartsWith': '" + extractLast(request.term) + "'}",
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
-              response($.map(data, function (item) {
-                // Show the name and e-mail in the DropDown
-                //return item.Name + ' [' + item.Email + ']';
-                return {
-                  label: item,
-                  value: item
-                };
-              }));
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-              //debugger;
-              // XMLHttpRequest.responseText contains JSON like this 
-              //   {"Message":"The exception message","StackTrace":"   at EmailLookup.GetData(String nameStartsWith) in ...","ExceptionType":"System.Exception"}
-              // So just parse it out and display it!
-              var err = jQuery.parseJSON(XMLHttpRequest.responseText);
-              alert(err.Message);
-            }
-          }); // (end of ".ajax()")
-        }
-      });
     },
 
     toggleCommentModel: function (e) {
