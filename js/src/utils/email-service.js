@@ -15,12 +15,15 @@
       return Backbone.siteRootUrl + 'email/sendemail';
     },
 
-    getContent: function (incidentId, workflowTypeId,  callback) {
+    getContent: function (data,  callback) {
       var url = this._getUrl();
+
+      if (!this.isValid(data)) return;
+
       $.ajax({
         type: 'post',
         url: url,
-        data: { incidentId: incidentId, currentType: workflowTypeId },
+        data: data,
         success: function (data) {
           if (_.isFunction(callback)) callback(data);
         },
@@ -28,6 +31,14 @@
           console.log(error);
         }
       });
+    },
+
+    isValid: function(data) {
+      if (!data.incidentId) return false;
+      if (data.workflowTypeId && data.receivers) return false;
+      if (typeof data.workflowTypeId !== 'number'
+        || typeof data.receivers !== 'string') return false;
+      return true;
     },
 
     send: function (incidentId, emailData, callback) {
@@ -54,37 +65,8 @@
       });
     },
 
-    displayEmailPopout: function (toUsers) {
-      if (!toUsers || typeof toUser !== 'string') return void 0;
-
-      var incidentId = Backbone.incident.incidentId,
-          workflowTypeId = Backbone.incident.workflowTypeId,
-          emailService, emailPopout;
-
-
-      if (Backbone.incident.workflowTypeId === common.WORKFLOW_TYPE.WorkingGroup) {
-        emailService = this._getEmailService('email', 'ComposeLastCallEmail');
-      } else {
-        emailService = this._getEmailService('email', 'ComposeReminderEmail');
-      }
-
-      emailPopout = new EmailPopoutView({
-        model: {
-          emailService: emailService,
-          incidentId: incidentId,
-          workflowTypeId: workflowTypeId
-        }
-      });
-
-      return emailPopout;
-    },
-
     _getUrl: function () {
       return Backbone.siteRootUrl + this.controller + '/' + this.action;
-    },
-
-    _getEmailService: function (controller, action) {
-      return new EmailService(controller, action);
     },
 
   });

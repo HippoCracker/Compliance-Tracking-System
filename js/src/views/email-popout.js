@@ -27,8 +27,12 @@
       var incidentId = this.model.incidentId,
           workflowTypeId = this.model.workflowTypeId,
           emailService = this.model.emailService,
-          callback;
+          data, callback;
 
+      data = {
+        incidentId: incidentId,
+        workflowTypeId: workflowTypeId
+      }
 
       if (!(emailService && incidentId && workflowTypeId)) {
         throw new Error('EmailPopout initialize - Invalide Arugments');
@@ -40,7 +44,7 @@
         this.render();
       }.bind(this)
 
-      emailService.getContent(incidentId, workflowTypeId, callback);
+      emailService.getContent(data, callback);
       this.emailService = emailService;
     },
 
@@ -64,11 +68,11 @@
     },
 
     hidePopout: function () {
-      this.$el.fadeOut("fast");
+      this.$el.fadeOut();
     },
 
     showPopout: function () {
-      this.$el.fadeIn("fast");
+      this.$el.fadeIn();
     },
 
     toggleCommentModel: function (e) {

@@ -4,7 +4,8 @@
   'backbone',
   '../common',
   './components/navigation',
-  './confirm-popout',
+  './not-reviewed-popout',
+  './move-workflow-popout',
   './email-popout',
   '../utils/email-service',
   '../utils/animation'
@@ -12,7 +13,8 @@
   $, _, Backbone,
   common,
   Navigation,
-  ConfirmPopoutView,
+  NotReviewedPopoutView,
+  MoveWorkflowPopoutView,
   EmailPopoutView,
   EmailService,
   Animation) {
@@ -39,7 +41,6 @@
 
     initialize: function () {
       this.pageNav = new Navigation({ model: this.navTags });
-      this.popout = new ConfirmPopoutView();
       var toggleComponents = this.toggleComponents.bind(this);
       $(window).scroll(toggleComponents)
     },
@@ -75,7 +76,16 @@
     },
 
     showPopout: function () {
-      this.popout.render();
+      var popout,
+          notReviewedPopoutTemplate = $('#not-reviewed-participants-template').html();
+
+      if (notReviewedPopoutTemplate.length > 0) {
+        popout = new NotReviewedPopoutView();
+      } else {
+        popout = new MoveWorkflowPopoutView();
+      }
+      popout.render();
+      this.popout = popout;
     },
 
     displayEmailPopout: function (e) {

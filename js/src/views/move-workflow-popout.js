@@ -14,14 +14,10 @@
 
     events: {
       'click #popout-cancel-btn'          : 'hidePopout',
-      'click #display-email-popout-btn'   : 'hidePopout',
       'click #popout-submit-btn'          : 'sendReviewCompleteRequest',
-      'click #select-all-checkbox': 'toggleRecevierCheckbox',
       'click #create-workflow-btn' : 'createWorkflow',
       'change .workflow-radio'            : 'switchActiveTag',
-      'change .send-email-checkbox'       : 'toggleSendEmailBtn',
       'change #workflowTypeDropdown'      : 'changeUIAndFetchParticipants',
-      'change #change-workflow-checkbox'  : 'toggleWorkflowSection',
     },
 
     initialize: function () {
@@ -41,11 +37,11 @@
     },
 
     hidePopout: function () {
-      this.$el.fadeOut("fast");
+      this.$el.fadeOut();
     },
 
     showPopout: function () {
-      this.$el.fadeIn("fast");
+      this.$el.fadeIn();
     },
 
     switchActiveTag: function (e) {
@@ -116,22 +112,12 @@
       this.changeFormUI();
     },
 
-    toggleWorkflowSection: function () {
-      if (this.$nextWorkflowCheckbox.is(':checked')) {
-        Animation.slide('Down', '#next-workflow-section', { duration: 400, easing: 'ease-in-out' });
-      } else {
-        $('#next-workflow-radio').trigger('click');
-        Animation.slide('Up', '#next-workflow-section', { duration: 400, easing: 'ease-in-out' });
-      }
-    },
-
     sendReviewCompleteRequest: function () {
-      var isMoveWorkflow = this.$nextWorkflowCheckbox.is(':checked'),
-          successCallback = this.successReviewComplete.bind(this);
+      var successCallback = this.successReviewComplete.bind(this);
       $.ajax({
         type: "POST",
         url: Backbone.siteRootUrl + "PostMortem/ReviewComplete",
-        data: { incidentId: Backbone.incident.incidentId, isMoveWorkflow: isMoveWorkflow },
+        data: { incidentId: Backbone.incident.incidentId, isMoveWorkflow: true },
         dataType: 'json',
         success: function (data) {
           if (data.isMoveWorkflow) {
@@ -166,26 +152,6 @@
 
     errorReviewComplete: function(err) {
 
-    },
-
-    toggleSendEmailBtn: function () {
-      var length = this.$el.find('.send-email-checkbox:checked').length;
-      if (length === 0) {
-        this.emailPopoutBtn.setAttribute('disabled', 'true');
-      } else {
-        this.emailPopoutBtn.removeAttribute('disabled');
-      }
-    },
-
-    toggleRecevierCheckbox: function (e) {
-      var isSelectAll = $(e.target).is(':checked');
-      var recevierCheckboxes = this.$el.find('.send-email-checkbox');
-      if (isSelectAll) {
-        _.each(recevierCheckboxes, function (checkbox) { checkbox.setAttribute('checked', 'checked'); });
-      } else {
-        _.each(recevierCheckboxes, function (checkbox) { checkbox.removeAttribute('checked'); });
-      }
-      this.toggleSendEmailBtn();
     },
 
     createWorkflow: function () {
