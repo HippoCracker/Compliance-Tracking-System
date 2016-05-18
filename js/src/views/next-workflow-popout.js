@@ -39,11 +39,11 @@
       this.workflowRadioBtns = this.$el.find('.workflow-radio');
       this.workflowForm = this.$el.find('#new-workflow-settings-form');
       this.emailPopoutBtn = document.getElementById('display-email-popout-btn');
-      this.participantsTagit = new Tagit('#workflow-participants');
       this.$participantsNameInput = $(this.workflowForm).find('#workflow-participants');
       this.$endDateInput = this.$el.find('#workflow-end-date');
       this.$alertThreshold = this.$el.find('#alert-threshold');
       this.$durationLabel = this.$el.find('#duration-label');
+      this.participantsTagit = new Tagit('#workflow-participants', { afterTagRemoved: this.validateUserInputs.bind(this) });
 
       this.$endDateInput.datepicker({
         minDate: new Date(),
