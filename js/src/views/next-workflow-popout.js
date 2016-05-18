@@ -2,25 +2,35 @@
   'jquery',
   'underscore',
   'backbone',
+  '../common',
   './email-popout',
   '../utils/email-service',
   '../utils/animation',
   '../utils/custom-tagit',
-], function ($, _, Backbone, EmailPopoutView, EmailService, Animation, Tagit) {
+  'jquery.ui.datepicker',
+  'date-format',
+], function ($, _, Backbone, common, EmailPopoutView, EmailService, Animation, Tagit, dateFormat) {
 
   var PopoutView = Backbone.View.extend({
 
     el: '#confirm-popout-container',
 
+    attributes: {
+      expand: false
+    },
+
     events: {
       'click #popout-cancel-btn'          : 'hidePopout',
       'click #popout-submit-btn'          : 'sendReviewCompleteRequest',
-      'click #create-workflow-btn' : 'createWorkflow',
-      'change .workflow-radio'            : 'switchActiveTag',
-      'change #workflowTypeDropdown'      : 'changeUIAndFetchParticipants',
+      'click #create-workflow-btn'        : 'createWorkflow',
+      'click .workflow-radio'             : 'switchActiveTag',
+      'change #workflowTypeDropdown': 'fetchParticipantsAndValidate',
+      'keyup #workflow-end-date': 'validateUserInputs',
     },
 
     initialize: function () {
+      var onSelectCallback = this.updateDuration.bind(this)
+
       this.$cancelBtn = $('#popout-cancel-btn');
       this.$submitBtn = $('#popout-submit-btn');
       this.$createWorkflowBtn = $('#create-workflow-btn');
@@ -30,6 +40,16 @@
       this.workflowForm = this.$el.find('#new-workflow-settings-form');
       this.emailPopoutBtn = document.getElementById('display-email-popout-btn');
       this.participantsTagit = new Tagit('#workflow-participants');
+      this.$participantsNameInput = $(this.workflowForm).find('#workflow-participants');
+      this.$endDateInput = this.$el.find('#workflow-end-date');
+      this.$alertThreshold = this.$el.find('#alert-threshold');
+      this.$durationLabel = this.$el.find('#duration-label');
+
+      this.$endDateInput.datepicker({
+        minDate: new Date(),
+        dateFormat: 'M. dd yy',
+        onSelect: onSelectCallback
+      });
     },
 
     render: function () {
@@ -44,6 +64,16 @@
       this.$el.fadeIn();
     },
 
+    updateDuration: function (date) {
+      var date, diff;
+      if (date && typeof date === 'string') {
+        date = new Date(date);
+      }
+      diff = date.getDate() - (new Date()).getDate() + 1;
+      this.$durationLabel.html('Duration: ' + diff + (diff > 1 ? 'days.' : 'day'));
+      this.validateUserInputs();
+    },
+
     switchActiveTag: function (e) {
       var btns = this.workflowRadioBtns,
           clickedBtn = e.target;
@@ -54,31 +84,42 @@
       $(clickedBtn).next('label').addClass('active');
 
       if (clickedBtn.id === 'create-workflow-radio') {
+        this.expand();
+      } else {
+        this.fold();
+      }
+    },
+
+    expand: function() {
+      if (!this.attributes.expand) {
         Animation.slide('Down', this.workflowForm, { duration: 400, easing: 'ease-in-out' });
-        Animation.move('#popout-window', { top: 0 });
+        Animation.move('#popout-window', { top: 60 });
         this.$submitBtn.attr('disabled', 'true');
-      } else {
+        this.attributes.expand = true;
+      }
+    },
+
+    fold: function () {
+      if (this.attributes.expand) {
         Animation.slide('Up', this.workflowForm, { duration: 400, easing: 'ease-in-out' });
-        Animation.reverse('#popout-window');
+        Animation.move('#popout-window', { top: 120 });
         this.$submitBtn.removeAttr('disabled');
+        this.attributes.expand = false;
       }
     },
 
-    changeFormUI: function () {
-      var selectedValue = Number(this.$workflowDropdown.val());
-      if (selectedValue === -1) {
-        this.participantsTagit.disable();
-        this.$createWorkflowBtn.attr('disabled', 'true');
-      } else {
-        this.participantsTagit.enable();
-        this.participantsTagit.update();
-        this.$createWorkflowBtn.removeAttr('disabled');
-      }
+    fetchParticipantsAndValidate: function () {
+      this.fetchWorkflowData();
+      this.validateUserInputs();
     },
 
-    fetchParticipantsData: function () {
-      var participantsTagit = this.participantsTagit;
-      var selectedValue = Number(this.$workflowDropdown.val());
+    fetchWorkflowData: function () {
+      var $endDateInput = this.$endDateInput,
+          $alertThreshold = this.$alertThreshold,
+          participantsTagit = this.participantsTagit,
+          updateDuration = this.updateDuration.bind(this),
+          selectedValue = Number(this.$workflowDropdown.val()),
+          endDate, formatEndDate;
       
       if (selectedValue !== -1) {
         $.ajax({
@@ -89,14 +130,17 @@
             workflowTypeId: selectedValue
           },
           success: function (result) {
-            console.log("success");
-            console.log(result);
             participantsTagit.clear();
-            var participants = result.split(',');
+            var participants = result.participants.split(',');
             _.each(participants, function (participant) {
               participantsTagit.add(participant);
             });
 
+            endDate = new Date(result.endDate);
+            updateDuration(endDate);
+            $endDateInput.val(common.formatDate(endDate));
+            $alertThreshold.val(result.alertThreshold);
+            $alertThreshold.removeAttr('disabled');
           },
           error: function (e) {
             console.log("error");
@@ -107,9 +151,39 @@
       } 
     },
 
-    changeUIAndFetchParticipants: function () {
-      this.fetchParticipantsData();
-      this.changeFormUI();
+    validateUserInputs: function () {
+      var selectedValue = Number(this.$workflowDropdown.val()),
+          isAllValid = true,
+          endDateText = this.$endDateInput.val();
+
+      if (selectedValue === -1) {
+        this.participantsTagit.disable();
+        isAllValid = false;
+      } else {
+        this.participantsTagit.enable();
+        this.participantsTagit.update();
+      }
+
+      if (this.$participantsNameInput.val().length === 0) {
+        isAllValid = false;
+      }
+
+      if (!endDateText || !Date.parse(endDateText)) {
+        isAllValid = false;
+      }
+
+      if (isAllValid) {
+        this.$createWorkflowBtn.removeAttr('disabled');
+      } else {
+        this.$createWorkflowBtn.attr('disabled', 'true');
+      }
+    },
+
+    _isValidInputs: function() {
+      var selectedValue = Number(this.$workflowDropdown.val());
+      if (selectedValue === -1) {
+
+      }
     },
 
     sendReviewCompleteRequest: function () {
@@ -156,7 +230,7 @@
 
     createWorkflow: function () {
       var workflowTypeId = $(this.workflowForm).find('#workflowTypeDropdown').val(),
-          participantsIdentity = $(this.workflowForm).find('#workflow-participants').val(),
+          participantsIdentity = this.$participantsNameInput.val(),
           callback = this.displayAlert.bind(this),
           incident = Backbone.incident,
           result;

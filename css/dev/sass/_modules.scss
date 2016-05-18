@@ -1151,6 +1151,10 @@ ul.tabs {
 
 }//popout-window
 
+#workflow-end-date {
+	background: $white;
+}
+
 
 .email-popout {
 	top: 60px;
@@ -1231,6 +1235,8 @@ ul.tabs {
 }//.email-popout
 
 
+
+
 ul.tagit.ui-widget {
 	width: 100%;
 	margin: 0;
@@ -1291,6 +1297,7 @@ ul.tagit.ui-widget {
 	min-width: 400px;
 	max-width: 700px;
 
+	#new-workflow-settings-form,
 	#workflow-participants {
 		display: none;
 	}
@@ -1435,14 +1442,14 @@ ul.tagit.ui-widget {
 
 }
 
-#next-workflow-section,
-#new-workflow-settings-form {
-	display: none;
+
+
+// ============================================================
+// ======================= datepicker =========================
+// ============================================================
+#ui-datepicker-div {
+
 }
-
-
-
-
 
 
 

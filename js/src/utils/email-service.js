@@ -18,7 +18,8 @@
     getContent: function (data,  callback) {
       var url = this._getUrl();
 
-      if (!this.isValid(data)) return;
+      if (!this.isValid(data))
+        throw new Error("Invalid data parameter in method: getContent, class: email-service");
 
       $.ajax({
         type: 'post',
@@ -34,11 +35,13 @@
     },
 
     isValid: function(data) {
-      if (!data.incidentId) return false;
-      if (data.workflowTypeId && data.receivers) return false;
-      if (typeof data.workflowTypeId !== 'number'
-        || typeof data.receivers !== 'string') return false;
-      return true;
+      var incidentId = data.incidentId,
+          workflowType = data.workflowType,
+          receivers = data.receivers;
+
+      if (!incidentId) return false;
+      return ((workflowType && typeof workflowType === 'number')
+           || (receivers && typeof data.receivers === 'string'))
     },
 
     send: function (incidentId, emailData, callback) {

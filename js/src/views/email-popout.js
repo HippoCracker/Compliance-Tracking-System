@@ -24,23 +24,16 @@
     },
 
     initialize: function () {
-      var incidentId = this.model.incidentId,
-          workflowTypeId = this.model.workflowTypeId,
-          emailService = this.model.emailService,
-          data, callback;
+      var emailService = this.model.emailService,
+          data = this.model.data,
+          callback;
 
-      data = {
-        incidentId: incidentId,
-        workflowTypeId: workflowTypeId
-      }
+      if (!emailService || !data)
+        throw new Error("Invalid parameters, must pass a model object contains EmailService and data");
 
-      if (!(emailService && incidentId && workflowTypeId)) {
-        throw new Error('EmailPopout initialize - Invalide Arugments');
-      }
-
-      callback = function (data) {
-        this.model = data;
-        this.$el.html(this.template(data));
+      callback = function (result) {
+        this.model = result;
+        this.$el.html(this.template(result));
         this.render();
       }.bind(this)
 

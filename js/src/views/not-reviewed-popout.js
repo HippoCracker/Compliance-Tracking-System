@@ -3,11 +3,11 @@
   'underscore',
   'backbone',
   '../common',
-  './move-workflow-popout',
+  './next-workflow-popout',
   './email-popout',
   '../utils/email-service',
   'text!templates/not-reviewed-popout-template.html'
-], function ($, _, Backbone, common, MoveWorkflowPopoutView, EmailPopoutView, EmailService, popoutTemplate) {
+], function ($, _, Backbone, common, NextWorkflowPopoutView, EmailPopoutView, EmailService, popoutTemplate) {
 
   var NotReviewedPopoutView = Backbone.View.extend({
 
@@ -26,13 +26,15 @@
     },
 
     initialize: function () {
-      this.emailPopoutBtn = $('#display-email-popout-btn');
+
     },
 
     render: function () {
       this.model.notReviewedRows = $("#not-reviewed-participants-template").html();
       this.$el.html(this.template(this.model));
       this.showPopout();
+
+      this.$emailPopoutBtn = this.$el.find('#display-email-popout-btn');
     },
 
     hidePopout: function () {
@@ -45,16 +47,16 @@
 
     showNextWorkflowPopout: function () {
       this.hidePopout();
-      var moveWorkflowPopout = new MoveWorkflowPopoutView();
+      var moveWorkflowPopout = new NextWorkflowPopoutView();
       moveWorkflowPopout.render();
     },
 
     toggleSendEmailBtn: function () {
       var length = this.$el.find('.send-email-checkbox:checked').length;
       if (length === 0) {
-        this.emailPopoutBtn.setAttribute('disabled', 'true');
+        this.$emailPopoutBtn.attr('disabled', 'true');
       } else {
-        this.emailPopoutBtn.removeAttribute('disabled');
+        this.$emailPopoutBtn.removeAttr('disabled');
       }
     },
 
@@ -70,11 +72,11 @@
     },
 
     showEmailPopout: function () {
-      var participants = this._getSelectedParticipants();
+      this.hidePopout();
       this.displayEmailPopout();
     },
 
-    _getSelectedParticipants: function () {
+    _getSelectedReceiver: function () {
       $checkboxes = this.$el.find('#unreviewed-participant-table input[type="checkbox"].send-email-checkbox');
       var result = [],
           len = $checkboxes.length,
@@ -93,19 +95,22 @@
     displayEmailPopout: function (e) {
       var incidentId = Backbone.incident.incidentId,
           workflowTypeId = Backbone.incident.workflowTypeId,
+          receviers = this._getSelectedReceiver(),
           emailService, emailPopout;
 
       if (Backbone.incident.workflowTypeId === common.WORKFLOW_TYPE.WorkingGroup) {
-        emailService = new EmailService('email', 'ComposeLastCallEmail');
+        emailService = new EmailService('email', 'ComposeLastCallEmailForReceivers');
       } else {
-        emailService = new EmailService('email', 'ComposeReminderEmail');
+        emailService = new EmailService('email', 'ComposeReminderEmailForReceivers');
       }
 
       this.emailPopout = new EmailPopoutView({
         model: {
           emailService: emailService,
-          incidentId: incidentId,
-          workflowTypeId: workflowTypeId
+          data: {
+            incidentId: incidentId,
+            receivers: receviers
+          }
         }
       });
     },

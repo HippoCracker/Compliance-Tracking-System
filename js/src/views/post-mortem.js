@@ -5,16 +5,16 @@
   '../common',
   './components/navigation',
   './not-reviewed-popout',
-  './move-workflow-popout',
+  './next-workflow-popout',
   './email-popout',
   '../utils/email-service',
-  '../utils/animation'
+  '../utils/animation',
 ], function (
   $, _, Backbone,
   common,
   Navigation,
   NotReviewedPopoutView,
-  MoveWorkflowPopoutView,
+  NextWorkflowPopoutView,
   EmailPopoutView,
   EmailService,
   Animation) {
@@ -82,7 +82,7 @@
       if (notReviewedPopoutTemplate.length > 0) {
         popout = new NotReviewedPopoutView();
       } else {
-        popout = new MoveWorkflowPopoutView();
+        popout = new NextWorkflowPopoutView();
       }
       popout.render();
       this.popout = popout;
@@ -102,8 +102,10 @@
       this.emailPopout = new EmailPopoutView({
         model: {
           emailService: emailService,
-          incidentId: incidentId,
-          workflowTypeId: workflowTypeId
+          data: {
+            incidentId: incidentId,
+            workflowType: workflowTypeId
+          }
         }
       });
     },
@@ -111,7 +113,6 @@
     _getEmailService: function (controller, action) {
       return new EmailService(controller, action);
     },
-
 
   });
 
