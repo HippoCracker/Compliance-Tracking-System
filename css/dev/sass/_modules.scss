@@ -1162,6 +1162,10 @@ ul.tabs {
 	min-width: 600px;
 	max-width: 850px;
 
+	table {
+		margin: 0 auto;
+	}
+
 	#emailAdditionComments {
 		display: none;
 
@@ -1486,7 +1490,7 @@ table {
 table.checkbox-table {
 	th.row-checkbox-container,
 	td.row-checkbox-container {
-		display: inline-block;
+		display: table-cell;
 	}
 }
 

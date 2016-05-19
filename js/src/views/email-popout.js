@@ -26,11 +26,11 @@
     initialize: function () {
       var emailService = this.model.emailService,
           data = this.model.data,
-          participantsTableContainer = $('#current-stage-detail-template'),
+          $participantsTableContainer = $('#current-stage-detail-template'),
           callback;
 
-      participantsTableContainer.find('table').attr('class', 'checkbox-table');
-      this.model.participantsTable = participantsTableContainer.find('.table-container').html();
+      $participantsTableContainer.find('table').attr('class', 'checkbox-table');
+      this.model.participantsTable = $participantsTableContainer.find('.table-container').html();
 
       if (!emailService || !data)
         throw new Error("Invalid parameters, must pass a model object contains EmailService and data");
@@ -44,6 +44,7 @@
 
       emailService.getContent(data, callback);
       this.emailService = emailService;
+      this.$participantsTableContainer = $participantsTableContainer;
     },
 
     render: function () {
@@ -54,7 +55,6 @@
 
       var ccBeforeRemove = this.beforeRemoveUserFromCC.bind(this);
       this.ccAddressTagit = new Tagit('#email-cc-address', { beforeTagRemoved: ccBeforeRemove });
-      this.toAddressTagit = new Tagit('#email-to-address');
       this.insertAndCacheCommentArea();
       this.showPopout();
     },
@@ -144,7 +144,7 @@
       if (isValid) {
         sendBtn.setAttribute('disabled', 'true');
 
-        model.ToAddress = this.toAddressInput.value;
+        model.ToAddress = this.$participantsTableContainer.find('.row-checkbox-container input:checked');
         model.CCAddress = this.ccAddressInput.value;
         model.UserMessageBody = this.userCommentTextArea.value;
 
@@ -152,9 +152,8 @@
       }
     },
 
-    _validateForm: function() {
-      var receiverNameAndEmails = this.toAddressInput.value;
-      return receiverNameAndEmails.length > 0;
+    _validateForm: function () {
+      return true;
     },
 
     _showSendResult: function (result, elems) {
