@@ -26,14 +26,19 @@
     initialize: function () {
       var emailService = this.model.emailService,
           data = this.model.data,
+          participantsTableContainer = $('#current-stage-detail-template'),
           callback;
+
+      participantsTableContainer.find('table').attr('class', 'checkbox-table');
+      this.model.participantsTable = participantsTableContainer.find('.table-container').html();
 
       if (!emailService || !data)
         throw new Error("Invalid parameters, must pass a model object contains EmailService and data");
 
       callback = function (result) {
-        this.model = result;
-        this.$el.html(this.template(result));
+        var model = this.model
+        _.extend(model, result);
+        this.$el.html(this.template(model));
         this.render();
       }.bind(this)
 

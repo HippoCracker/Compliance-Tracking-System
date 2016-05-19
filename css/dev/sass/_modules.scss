@@ -1174,7 +1174,6 @@ ul.tabs {
 		font-weight: bold;
 	}
 
-	#email-to-address,
 	#email-cc-address,
 	#email-cc-container,
 	.error-message {
@@ -1289,18 +1288,11 @@ ul.tagit.ui-widget {
 	}//.tagit-close
 }//ul.tagit.ui-widget
 
-
-
 .confirm-popout {
 	top: 120px;
 	width: 60%;
 	min-width: 400px;
 	max-width: 700px;
-
-	#new-workflow-settings-form,
-	#workflow-participants {
-		display: none;
-	}
 }//.confirm-popout
 
 
@@ -1484,7 +1476,19 @@ ul.tagit.ui-widget {
 }
 
 
+table {
+	th.row-checkbox-container,
+	td.row-checkbox-container {
+		display: none;
+	}
+}
 
+table.checkbox-table {
+	th.row-checkbox-container,
+	td.row-checkbox-container {
+		display: inline-block;
+	}
+}
 
 
 

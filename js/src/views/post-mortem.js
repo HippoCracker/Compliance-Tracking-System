@@ -76,14 +76,7 @@
     },
 
     showPopout: function () {
-      var popout,
-          notReviewedPopoutTemplate = $('#not-reviewed-participants-template').html();
-
-      if (notReviewedPopoutTemplate.length > 0) {
-        popout = new NotReviewedPopoutView();
-      } else {
-        popout = new NextWorkflowPopoutView();
-      }
+      var popout = new NextWorkflowPopoutView();
       popout.render();
       this.popout = popout;
     },
