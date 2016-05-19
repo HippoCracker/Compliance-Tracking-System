@@ -11,6 +11,10 @@
       options.tagSource = this.getTagSource;
     }
 
+    if (options.validateFunc) {
+      this.validateFunc = options.validateFunc;
+    }
+
     this.$elem = $(elem);
     this.$elem.tagit(options);
   };
@@ -75,7 +79,6 @@
         }
       }); 
     },
-
 
   });
 

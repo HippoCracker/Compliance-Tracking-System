@@ -24,7 +24,7 @@
       'click #popout-submit-btn'          : 'sendReviewCompleteRequest',
       'click #create-workflow-btn'        : 'createWorkflow',
       'click .workflow-radio'             : 'switchActiveTag',
-      'change #workflowTypeDropdown': 'fetchParticipantsAndValidate',
+      'change #workflowTypeDropdown': 'fetchWorkflowData',
       'keyup #workflow-end-date': 'validateUserInputs',
     },
 
@@ -43,7 +43,11 @@
       this.$endDateInput = this.$el.find('#workflow-end-date');
       this.$alertThreshold = this.$el.find('#alert-threshold');
       this.$durationLabel = this.$el.find('#duration-label');
-      this.participantsTagit = new Tagit('#workflow-participants', { afterTagRemoved: this.validateUserInputs.bind(this) });
+      this.participantsTagit = new Tagit('#workflow-participants',
+        {
+          afterTagRemoved: this.validateUserInputs.bind(this),
+          afterTagAdded: this.validateUserInputs.bind(this)
+        });
 
       this.$endDateInput.datepicker({
         minDate: new Date(),
@@ -64,14 +68,32 @@
       this.$el.fadeIn();
     },
 
-    updateDuration: function (date) {
+    updateDuration: function(date) {
+      var duration = this.calculateDuration(date);
+      this.updateDurationLabel(duration);
+    },
+
+    calculateDuration: function (date) {
       var date, diff;
       if (date && typeof date === 'string') {
         date = new Date(date);
       }
-      diff = date.getDate() - (new Date()).getDate() + 1;
-      this.$durationLabel.html('Duration: ' + diff + (diff > 1 ? 'days.' : 'day'));
-      this.validateUserInputs();
+      return diff = date.getDate() - (new Date()).getDate() + 1;
+    },
+
+    updateDurationLabel: function(duration) {
+      this.$durationLabel.html('Duration: ' + duration + (duration > 1 ? ' days.' : ' day'));
+      this.updateAlertThresholdDropdown(duration);
+    },
+
+    updateAlertThresholdDropdown: function(duration) {
+      var $alertThreshold = this.$alertThreshold,
+          index;
+      $alertThreshold.empty();
+      for (index = 1; index <= duration; index++) {
+        $alertThreshold.append('<option value="' + index + '">' + index + '</option>');
+      }
+      
     },
 
     switchActiveTag: function (e) {
@@ -108,18 +130,16 @@
       }
     },
 
-    fetchParticipantsAndValidate: function () {
-      this.fetchWorkflowData();
-      this.validateUserInputs();
-    },
-
     fetchWorkflowData: function () {
       var $endDateInput = this.$endDateInput,
           $alertThreshold = this.$alertThreshold,
           participantsTagit = this.participantsTagit,
-          updateDuration = this.updateDuration.bind(this),
+          calculateDuration = this.calculateDuration,
+          updateDurationLabel = this.updateDurationLabel.bind(this),
+          updateDuration = this.updateDurationLabel.bind(this),
+          updateAlertThresholdDropdown = this.updateAlertThresholdDropdown.bind(this),
           selectedValue = Number(this.$workflowDropdown.val()),
-          endDate, formatEndDate;
+          endDate, formatEndDate, duration;
       
       if (selectedValue !== -1) {
         $.ajax({
@@ -130,17 +150,19 @@
             workflowTypeId: selectedValue
           },
           success: function (result) {
+            endDate = new Date(result.endDate);
+            duration = calculateDuration(endDate);
+            updateDurationLabel(duration);
+            updateAlertThresholdDropdown(duration);
+            $endDateInput.val(common.formatDate(endDate));
+            $alertThreshold.val(result.alertThreshold);
+            $alertThreshold.removeAttr('disabled');
+
             participantsTagit.clear();
             var participants = result.participants.split(',');
             _.each(participants, function (participant) {
               participantsTagit.add(participant);
             });
-
-            endDate = new Date(result.endDate);
-            updateDuration(endDate);
-            $endDateInput.val(common.formatDate(endDate));
-            $alertThreshold.val(result.alertThreshold);
-            $alertThreshold.removeAttr('disabled');
           },
           error: function (e) {
             console.log("error");
@@ -231,6 +253,8 @@
     createWorkflow: function () {
       var workflowTypeId = $(this.workflowForm).find('#workflowTypeDropdown').val(),
           participantsIdentity = this.$participantsNameInput.val(),
+          endDate = this.$endDateInput.datepicker('getDate'),
+          alertThreshold = this.$alertThreshold.find(':selected').val(),
           callback = this.displayAlert.bind(this),
           incident = Backbone.incident,
           result;
@@ -241,7 +265,9 @@
         data: JSON.stringify({
           incidentId: incident.incidentId,
           workflowTypeId: workflowTypeId,
-          participants: participantsIdentity
+          participants: participantsIdentity,
+          endDate: endDate,
+          alertThreshold: alertThreshold
         }),
         contentType: 'application/json; charset=utf-8',
       }).done(function (data) {

@@ -1452,8 +1452,36 @@ ul.tagit.ui-widget {
 }
 
 
+// ============================================================
+// ==================== page-level-alert ======================
+// ============================================================
+.page-level-alert {
+	display: none;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  font-size: 1.4rem;
+  color: $white;
+  font-weight: bold;
+  letter-spacing: 0.05rem;
+}
 
+.page-level-alert.danger {
+	background: $red;
+}
 
+.page-level-alert.warning {
+	background: $yellow;
+}
+
+.page-level-alert.success {
+	background: $green;
+}
 
 
 
