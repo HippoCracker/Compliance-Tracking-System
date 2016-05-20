@@ -51,7 +51,6 @@
 
     render: function () {
       this.commentTextArea = document.getElementById('email-user-comment');
-      this.toAddressInput = document.getElementById('email-to-address');
       this.ccAddressInput = document.getElementById('email-cc-address');
       this.userCommentTextArea = document.getElementById('email-user-comment');
       this.$participantCheckboxes = this.$el.find('.row-checkbox-container input[type=checkbox]');
@@ -119,7 +118,14 @@
 
       addBtn.setAttribute('disabled', 'true');
 
-      this.ccAddressTagit.add(currentUser);
+      // Use this has error: cannot call methods on tagit prior to initialization
+      // TODO: figure out why.
+      //-----------------------
+      //this.ccAddressTagit.add(currentUser);
+
+      // Use update in custom-tagit
+      this.ccAddressInput.value = this.ccAddressInput.value.concat(currentUser);
+      this.ccAddressTagit.update();
     },
 
     beforeRemoveUserFromCC: function(event, ui) {
