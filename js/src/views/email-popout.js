@@ -21,18 +21,19 @@
       'click #select-all-btn' : 'toggleCheckboxes',
       'focus #email-user-comment': 'toggleCommentModel',
       'blur #email-user-comment': 'toggleCommentModel',
-      'keyup #email-user-comment': 'insertInputToMail'
+      'keyup #email-user-comment': 'insertInputToMail',
+      'change .send-email-checkbox': 'validateSelection'
     },
 
     initialize: function () {
       var emailService = this.model.emailService,
           data = this.model.data,
-          $participantsTableContainer = $('#current-stage-detail-template'),
+          $participantsTableContainer = $('#current-stage-detail-template').find('.table-container'),
           callback;
 
       this.model = {};
       $participantsTableContainer.find('table').attr('class', 'checkbox-table');
-      this.model.participantsTable = $participantsTableContainer.find('.table-container').html();
+      this.model.participantsTable = $participantsTableContainer.html();
 
       if (!emailService || !data)
         throw new Error("Invalid parameters, must pass a model object contains EmailService and data");
@@ -54,6 +55,7 @@
       this.ccAddressInput = document.getElementById('email-cc-address');
       this.userCommentTextArea = document.getElementById('email-user-comment');
       this.$participantCheckboxes = this.$el.find('.row-checkbox-container input[type=checkbox]');
+      this.$submitBtn = this.$el.find('#popout-submit-btn');
 
       var ccBeforeRemove = this.beforeRemoveUserFromCC.bind(this);
       this.ccAddressTagit = new Tagit('#email-cc-address', { beforeTagRemoved: ccBeforeRemove });
@@ -118,14 +120,7 @@
 
       addBtn.setAttribute('disabled', 'true');
 
-      // Use this has error: cannot call methods on tagit prior to initialization
-      // TODO: figure out why.
-      //-----------------------
-      //this.ccAddressTagit.add(currentUser);
-
-      // Use update in custom-tagit
-      this.ccAddressInput.value = this.ccAddressInput.value.concat(currentUser);
-      this.ccAddressTagit.update();
+      this.ccAddressTagit.add(currentUser);
     },
 
     beforeRemoveUserFromCC: function(event, ui) {
@@ -149,7 +144,7 @@
           model = this.model,
           $checkboxes = this.$participantCheckboxes,
           toAddressArray = [],
-          selectedCheckboxes = _.filter($checkboxes, function (checkbox) { return checkbox.checked == true });
+          selectedCheckboxes = this._getSelectedReceiverCheckboxes();
 
       showResultFunc = _.partial(showResultFunc, _, [sendBtn]);
       
@@ -176,10 +171,12 @@
         $checkboxes.each(function () {
           this.checked = false;
         });
+        this.$submitBtn.attr('disabled', 'true');
       } else {
         $checkboxes.each(function () {
           this.checked = true
         });
+        this.$submitBtn.removeAttr('disabled');
       }
     },
 
@@ -203,6 +200,21 @@
         $alertTag.attr('class', 'text-danger');
       }
     },
+
+    validateSelection: function () {
+      var selectedCheckboxes = this._getSelectedReceiverCheckboxes(),
+          $submitBtn = this.$submitBtn;
+      if (selectedCheckboxes.length === 0) {
+        $submitBtn.attr('disabled', 'true');
+      } else {
+        $submitBtn.removeAttr('disabled');
+      }
+    },
+
+    _getSelectedReceiverCheckboxes: function() {
+      var $checkboxes = this.$participantCheckboxes;
+      return _.filter($checkboxes, function (checkbox) { return checkbox.checked == true });
+    }
 
   });
 

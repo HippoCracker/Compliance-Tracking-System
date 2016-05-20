@@ -14,12 +14,21 @@
     if (options.validateFunc) {
       this.validateFunc = options.validateFunc;
     }
-
+    this.options = options;
     this.$elem = $(elem);
-    this.$elem.tagit(options);
+    this.init();
   };
 
+
   _.extend(CustomTagit.prototype, {
+    
+    init: function() {
+      var options = this.options;
+      if (typeof options === 'object') {
+        this.$elem.tagit(options);
+      }
+    },
+
     disable: function() {
       $('.ui-autocomplete-input').prop('disabled', true).val('');
       $('.tagit-choice').remove();
@@ -44,7 +53,12 @@
 
     add: function (values) {
       if (values && typeof values === 'string') {
-        this._addValueToTag(values);
+        try {
+          this._addValueToTag(values);
+        } catch (e) {
+          this.init();
+          this.add(values);
+        }
       }
     },
 
