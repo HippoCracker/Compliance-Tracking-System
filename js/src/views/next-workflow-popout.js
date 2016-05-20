@@ -28,6 +28,8 @@
       var $notReviewedTableContainer = $("#current-stage-detail-template .table-container"),
           content = this.$el.find('#next-workflow-popout > section');
 
+      $notReviewedTableContainer.find('table').attr('class', '');
+
       if ($notReviewedTableContainer.find('tr').length > 0) {
         content.html($notReviewedTableContainer.html());
       } else {

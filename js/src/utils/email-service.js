@@ -15,7 +15,7 @@
       return Backbone.siteRootUrl + 'email/sendemail';
     },
 
-    getContent: function (data,  callback) {
+    getEmailContent: function (data, callback) {
       var url = this._getUrl();
 
       if (!this.isValid(data))

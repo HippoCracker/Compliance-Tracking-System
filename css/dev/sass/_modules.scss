@@ -638,12 +638,13 @@
 		margin-right: auto;
 	}//table
 
+	.fa {
+		display: none;
+	}//fa
+
 	td, th {
 		text-align: center;
 
-		.fa {
-			display: none;
-		}//fa
 
 		&:first-of-type {
 			width: 30px;
@@ -657,74 +658,63 @@
 			border-bottom-right-radius: $default-border-radius;
 		}//last-of-type
 
-		a {
-			color: $darkgrey;
-			display: block;
-			width: 100%;
-			height: 100%;
-			cursor: not-allowed;
-			text-decoration: none;
-			pointer-events: none;
-		}//a
+
 	}//td
-		
-	.complete-status {
-		a {
-			cursor: pointer;
-			text-decoration: underline;
-			color: $darkblue;
-			font-weight: bold;
-			pointer-events: auto;
 
-			&:hover {
-				background: $blue;
-				color: $white;
-			}//hover
-		}//a
-	}//complete-status
-
-	.warning-status {
-		.fa-exclamation-triangle {
-			color: $orange;
-		}//fa-exclamation-triangle
-	}//warning-status
-
-	.dangerous-status {
-		.fa-times {
-			color: $red;
-		}//fa-times
-	}//dangerous-status
-
-	.complete-status {
-		.fa-check {
-			color: $green;
-		}//fa-check
-	}//complete-status
-	
-	.warning-status .fa, .dangerous-status .fa, .complete-status .fa {
+	a {
+		color: $darkgrey;
 		display: block;
-		cursor: pointer;
-	}
-
-/*
-		.warning-status {
-			background: $yellow;
-		}
-
-		.dangerous-status {
-			background: $red;
-		}
-
-		.complete-status {
-			background: $green;
-		}
-
-		*/
-
-
+		width: 100%;
+		height: 100%;
+		cursor: not-allowed;
+		text-decoration: none;
+		pointer-events: none;
+	}//a
+		
 }//.status-detail-dropdown, .status-detail-toggle
 
 
+.complete-status {
+	a {
+		cursor: pointer;
+		text-decoration: underline;
+		color: $darkblue;
+		font-weight: bold;
+		pointer-events: auto;
+
+		&:hover {
+			background: $blue;
+			color: $white;
+		}//hover
+	}//a
+
+	.fa {
+		display: block;
+	}
+}//complete-status
+
+.warning-status {
+	.fa-exclamation-triangle {
+		color: $orange;
+	}//fa-exclamation-triangle
+}//warning-status
+
+.dangerous-status {
+	.fa-times {
+		color: $red;
+	}//fa-times
+}//dangerous-status
+
+.complete-status {
+	.fa-check {
+		color: $green;
+	}//fa-check
+}//complete-status
+
+.warning-status .fa, .dangerous-status .fa, .complete-status .fa {
+	display: block;
+	cursor: pointer;
+}
 
 
 
@@ -1157,7 +1147,7 @@ ul.tabs {
 
 
 .email-popout {
-	top: 60px;
+	top: 40px;
 	width: 70%;
 	min-width: 600px;
 	max-width: 850px;

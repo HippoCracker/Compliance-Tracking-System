@@ -18,6 +18,7 @@
       'click #popout-submit-btn': 'sendEmail',
       'click #cc-btn': 'showCCInput',
       'click #cc-me-btn': 'addUserToCC',
+      'click #select-all-btn' : 'toggleCheckboxes',
       'focus #email-user-comment': 'toggleCommentModel',
       'blur #email-user-comment': 'toggleCommentModel',
       'keyup #email-user-comment': 'insertInputToMail'
@@ -29,6 +30,7 @@
           $participantsTableContainer = $('#current-stage-detail-template'),
           callback;
 
+      this.model = {};
       $participantsTableContainer.find('table').attr('class', 'checkbox-table');
       this.model.participantsTable = $participantsTableContainer.find('.table-container').html();
 
@@ -42,9 +44,9 @@
         this.render();
       }.bind(this)
 
-      emailService.getContent(data, callback);
+      emailService.getEmailContent(data, callback);
       this.emailService = emailService;
-      this.$participantsTableContainer = $participantsTableContainer;
+
     },
 
     render: function () {
@@ -52,6 +54,7 @@
       this.toAddressInput = document.getElementById('email-to-address');
       this.ccAddressInput = document.getElementById('email-cc-address');
       this.userCommentTextArea = document.getElementById('email-user-comment');
+      this.$participantCheckboxes = this.$el.find('.row-checkbox-container input[type=checkbox]');
 
       var ccBeforeRemove = this.beforeRemoveUserFromCC.bind(this);
       this.ccAddressTagit = new Tagit('#email-cc-address', { beforeTagRemoved: ccBeforeRemove });
@@ -137,18 +140,40 @@
           sendBtn = e.target,
           incidentId = Backbone.incident.incidentId,
           showResultFunc = this._showSendResult.bind(this),
-          model = this.model;
+          model = this.model,
+          $checkboxes = this.$participantCheckboxes,
+          toAddressArray = [],
+          selectedCheckboxes = _.filter($checkboxes, function (checkbox) { return checkbox.checked == true });
 
       showResultFunc = _.partial(showResultFunc, _, [sendBtn]);
       
       if (isValid) {
         sendBtn.setAttribute('disabled', 'true');
 
-        model.ToAddress = this.$participantsTableContainer.find('.row-checkbox-container input:checked');
+        _.each(selectedCheckboxes, function (checkbox) {
+          toAddressArray.push(checkbox.value);
+        });
+
+        model.ToAddress = toAddressArray.join(',');
         model.CCAddress = this.ccAddressInput.value;
         model.UserMessageBody = this.userCommentTextArea.value;
 
         this.emailService.send(incidentId, model, showResultFunc);
+      }
+    },
+
+    toggleCheckboxes: function(e) {
+      var $selectAllBtn = $(e.target),
+          $checkboxes = this.$participantCheckboxes;
+
+      if ($checkboxes.prop('checked')) {
+        $checkboxes.each(function () {
+          this.checked = false;
+        });
+      } else {
+        $checkboxes.each(function () {
+          this.checked = true
+        });
       }
     },
 

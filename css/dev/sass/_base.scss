@@ -288,7 +288,13 @@ table {
 		}//tr
 	}//tbody
 
+	td button.select-all-btn {
+		width: 100%;
+		border-radius: 0;
+	}
+
 }//table
+
 
 
 // ================================ header ===================================
