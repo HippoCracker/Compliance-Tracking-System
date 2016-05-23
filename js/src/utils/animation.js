@@ -35,7 +35,10 @@
     },
 
     toggle: function(button, toggleSelector, options) {
-      var $btn = $(button);
+      var $btn = $(button), options;
+      if (!options) {
+        options = { duration: 600, easing: 'ease-in-out' };
+      }
       if ($btn.hasClass('active')) {
         this.toggleUp(toggleSelector, options);
         $btn.removeClass('active');

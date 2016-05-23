@@ -5,7 +5,8 @@
   'text!templates/email-popout.html',
   '../utils/animation',
   '../utils/custom-tagit',
-], function ($, _, Backbone, emailPopoutTemplate, Animation, Tagit) {
+  './page-alert'
+], function ($, _, Backbone, emailPopoutTemplate, Animation, Tagit, PageAlert) {
 
   var EmailPopout = Backbone.View.extend({
 
@@ -160,6 +161,7 @@
         model.UserMessageBody = this.userCommentTextArea.value;
 
         this.emailService.send(incidentId, model, showResultFunc);
+        this.hidePopout();
       }
     },
 

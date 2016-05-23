@@ -1,8 +1,9 @@
 ﻿define([
   'jquery',
   'underscore',
-  'backbone'
-], function ($, _, Backbone) {
+  'backbone',
+  '../views/page-alert'
+], function ($, _, Backbone, PageAlert) {
 
   var EmailService = function (controller, action) {
     this.controller = controller;
@@ -56,6 +57,7 @@
         url: url,
         data: emailData,
         success: function (result) {
+          PageAlert.success(result.message);
           console.log('success: ' + result);
 
           if (typeof callback === 'function') {
@@ -63,6 +65,7 @@
           }
         },
         error: function (err) {
+          PageAlert.error(error.message);
           console.log('err:' + err);
         }
       });

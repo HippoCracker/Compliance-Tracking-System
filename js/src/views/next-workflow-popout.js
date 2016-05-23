@@ -4,7 +4,8 @@
   'backbone',
   './email-popout',
   '../utils/email-service',
-], function ($, _, Backbone, EmailPopoutView, EmailService) {
+  './page-alert'
+], function ($, _, Backbone, EmailPopoutView, EmailService, PageAlert) {
 
   var PopoutView = Backbone.View.extend({
 
@@ -54,6 +55,7 @@
         data: { incidentId: Backbone.incident.incidentId, isMoveWorkflow: true },
         dataType: 'json',
         success: function (data) {
+          PageAlert.success(data.message);
           if (data.isMoveWorkflow) {
             window.location.reload();
           } else {
@@ -61,6 +63,7 @@
           }
         },
         error: function (err) {
+          PageAlert.error(data.message);
           console.log('error: ' + err);
         }
       });
@@ -78,8 +81,10 @@
       emailPopout= new EmailPopoutView({
             model: {
               emailService: emailService,
-              incidentId: incidentId,
-              workflowTypeId: workflowTypeId
+              data: {
+                incidentId: incidentId,
+                workflowType: workflowTypeId
+              }
             }
           });
     }

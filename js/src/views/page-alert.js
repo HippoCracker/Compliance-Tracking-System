@@ -13,20 +13,41 @@
 
     },
 
-    render: function () {
-      var message = this.model.message,
-          statusClass = this.model.statusClass;
+    render: function (statusClass, message) {
+      var toggle = this.toggle.bind(this),
+          toggleUp = _.partial(toggle, 'up');
 
       this.$el.attr('class', 'page-level-alert ' + statusClass);
-      this.$el.html(this.model.message);
-      setTimeout()
+      this.$el.html(message);
+      this.toggle(true);
+      setTimeout(toggleUp, 3000);
     },
 
-    display: function () {
-    }
+    success: function(message) {
+      var statusClass = 'success';
+      this.render(statusClass, message);
+    },
 
+    error: function (message) {
+      var statusClass = 'danger';
+      this.render(statusClass, message);
+    },
+
+    warning: function(message) {
+      var statusClass = 'warning';
+      this.render(statusClass, message);
+    },
+
+    toggle: function (dir) {
+      var $el = this.$el;
+      if (dir === 'up') {
+        Animation.toggleUp($el);
+      } else {
+        Animation.toggleDown($el);
+      }
+    },
 
   })
 
-  return PageAlertView;
+  return new PageAlertView;
 });

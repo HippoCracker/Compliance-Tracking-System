@@ -1147,7 +1147,7 @@ ul.tabs {
 
 
 .email-popout {
-	top: 40px;
+	top: 80px;
 	width: 70%;
 	min-width: 600px;
 	max-width: 850px;
@@ -1442,9 +1442,10 @@ ul.tagit.ui-widget {
 // ==================== page-level-alert ======================
 // ============================================================
 .page-level-alert {
+	background: $red;
 	display: none;
   position: fixed;
-  z-index: 1000;
+  z-index: 1001;
   top: 0;
   left: 0;
   width: 100%;

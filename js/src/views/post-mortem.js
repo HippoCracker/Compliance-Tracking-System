@@ -110,7 +110,7 @@
 
     showStagesDetail: function () {
       var $btn = this.$showStagesDetailBtn;
-      Animation.toggle($btn, '#status-detail-toggle-wrapper', { duration: 600, easing: 'ease-in-out' });
+      Animation.toggle($btn, '#status-detail-toggle-wrapper');
     },
 
     hideStagesDetail: function (e) {
