@@ -663,9 +663,6 @@
 
 	a {
 		color: $darkgrey;
-		display: block;
-		width: 100%;
-		height: 100%;
 		cursor: not-allowed;
 		text-decoration: none;
 		pointer-events: none;
@@ -676,6 +673,9 @@
 
 .complete-status {
 	a {
+		display: block;
+		width: 100%;
+		height: 100%;
 		cursor: pointer;
 		text-decoration: underline;
 		color: $darkblue;

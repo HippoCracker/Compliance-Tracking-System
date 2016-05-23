@@ -35,11 +35,14 @@
       'click .edit-btn'       : 'submitEditForm',
       'click .email-reminder-btn': 'displayEmailPopout',
       'click .email-lastcall-btn': 'displayEmailPopout',
+      'click #show-status-details-btn': 'showStagesDetail',
+      'click .close-status-detail-btn': 'hideStagesDetail'
     },
 
     initialize: function () {
-      this.pageNav = new Navigation({ model: this.navTags });
       var toggleComponents = this.toggleComponents.bind(this);
+      this.pageNav = new Navigation({ model: this.navTags });
+      this.$showStagesDetailBtn = $('#show-status-details-btn');
       $(window).scroll(toggleComponents)
     },
 
@@ -104,6 +107,17 @@
     _getEmailService: function (controller, action) {
       return new EmailService(controller, action);
     },
+
+    showStagesDetail: function () {
+      var $btn = this.$showStagesDetailBtn;
+      Animation.toggle($btn, '#status-detail-toggle-wrapper', { duration: 600, easing: 'ease-in-out' });
+    },
+
+    hideStagesDetail: function (e) {
+      var $btn = this.$showStagesDetailBtn;
+      $btn.trigger('click');
+      $('#close-status-detail-container').css('top', -20);
+    }
 
   });
 

@@ -1,5 +1,5 @@
 ﻿require.config({
-  baseUrl: '/Scripts/post-mortem/',
+  baseUrl: window.baseSiteUrl + 'Scripts/post-mortem/',
   paths: {
     'underscore': 'libs/underscore/underscore-debug',
     'backbone': 'libs/backbone/backbone-debug',

@@ -34,6 +34,27 @@
       }
     },
 
+    toggle: function(button, toggleSelector, options) {
+      var $btn = $(button);
+      if ($btn.hasClass('active')) {
+        this.toggleUp(toggleSelector, options);
+        $btn.removeClass('active');
+      } else {
+        this.toggleDown(toggleSelector, options);
+        $btn.addClass('active');
+      }
+    },
+
+    toggleUp: function(selector, options) {
+      var $elem = $(selector);
+      $elem.velocity('slideUp', options);
+    },
+
+    toggleDown: function (selector, options) {
+      var $elem = $(selector);
+      $elem.velocity('slideDown', options);
+    },
+
     reverse: function (elem) {
       if (!elem) return;
       $(elem).velocity('reverse');
