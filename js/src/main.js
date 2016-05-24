@@ -9,7 +9,7 @@
     'jquery.ui.tagit' : 'libs/tag-it/tag-it-debug',
     'velocity': 'libs/velocity/velocity',
     'date-format': 'libs/date-format/date.format',
-    'text': 'node_modules/text/text'
+    'text': 'libs/text/text'
   },
 
   shim: {
@@ -19,6 +19,8 @@
 });
 
 require(['jquery', 'src/app'], function ($, App) {
+  // Avoid jQuery conflict when import multiple version.
+  // Use jQuery import by requirejs.
   var j = jQuery.noConflict(true);
 
   App.initialize();

@@ -71,11 +71,11 @@
     },
 
     hidePopout: function () {
-      this.$el.fadeOut();
+      this.$el.fadeOut('fast');
     },
 
     showPopout: function () {
-      this.$el.fadeIn();
+      this.$el.fadeIn('fast');
     },
 
     toggleCommentModel: function (e) {
@@ -150,7 +150,7 @@
       showResultFunc = _.partial(showResultFunc, _, [sendBtn]);
       
       if (isValid) {
-        sendBtn.setAttribute('disabled', 'true');
+        sendBtn.setAttribute('disabled', 'true');x
 
         _.each(selectedCheckboxes, function (checkbox) {
           toAddressArray.push(checkbox.value);

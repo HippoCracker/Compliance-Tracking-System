@@ -243,7 +243,7 @@
 	padding-right: 0;
 	padding-left: 0;
 
-  header.page-head {
+	header.page-head {
 		position: relative;
 		padding: 0 20px;
 		background: $white;
@@ -667,7 +667,7 @@
 		text-decoration: none;
 		pointer-events: none;
 	}//a
-		
+
 }//.status-detail-dropdown, .status-detail-toggle
 
 
@@ -806,19 +806,16 @@ ul.tabs {
 	border-bottom: 1px solid darken($lightgrey, .15);
 }
 
-.TabContents {
-	border: none;
-	padding: 30px;
 
-	.TitleBar {
-		color: $black;
-		background: transparent;
-		font-size: 1.6rem;
-		font-weight: normal;
+.TitleBar {
+	color: $black;
+	background: transparent;
+	font-size: 1.6rem;
+	font-weight: normal;
 
-		.btn-container {
-			font-size: 1rem;
-		}
+	.btn-container {
+		font-size: 1rem;
+	}
 	}//TitleBar
 
 	.report-contents {
@@ -865,6 +862,7 @@ ul.tabs {
 
 	.report-meta {
 		@include cf;
+		margin-top: 20px;
 
 		.row {
 			margin-top: 10px;
@@ -913,8 +911,6 @@ ul.tabs {
 			}//document
 		}//groupingContainer
 	}//report-meta
-
-}//TabContents
 
 
 
@@ -1006,7 +1002,7 @@ ul.tabs {
 			letter-spacing: 0.01em;
 			transition: color .3s, font-weight .3s, padding-right .3s;
 
-  		&:hover {
+			&:hover {
 				color: $grey;
 				font-weight: bold;
 				padding-right: 5px;
@@ -1133,8 +1129,8 @@ ul.tabs {
 		}//th label, td label
 	}//table
 
- .hint {
- 		padding: 5px 10px;
+	.hint {
+		padding: 5px 10px;
 		color: $grey;
 		font-size: 1rem;
 	}//hit
@@ -1444,18 +1440,18 @@ ul.tagit.ui-widget {
 .page-level-alert {
 	background: $red;
 	display: none;
-  position: fixed;
-  z-index: 1001;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 50px;
-  text-align: center;
-  line-height: 50px;
-  font-size: 1.4rem;
-  color: $white;
-  font-weight: bold;
-  letter-spacing: 0.05rem;
+	position: fixed;
+	z-index: 1001;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 50px;
+	text-align: center;
+	line-height: 50px;
+	font-size: 1.4rem;
+	color: $white;
+	font-weight: bold;
+	letter-spacing: 0.05rem;
 }
 
 .page-level-alert.danger {

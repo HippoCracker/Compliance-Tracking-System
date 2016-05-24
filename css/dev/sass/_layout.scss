@@ -9,9 +9,10 @@ $susy: (
 @include border-box-sizing;
 
 
-.wrapper {
+.container {
 	@include container();
-	min-width: 820px;
+	min-width: 700px;
+	width: 90%;
 }
 
 

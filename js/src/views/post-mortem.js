@@ -79,7 +79,6 @@
     showPopout: function () {
       var popout = new NextWorkflowPopoutView();
       popout.render();
-      this.popout = popout;
     },
 
     displayEmailPopout: function (e) {

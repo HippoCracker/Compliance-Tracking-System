@@ -40,15 +40,23 @@
     },
 
     hidePopout: function () {
-      this.$el.fadeOut();
+      this.$el.fadeOut('fast');
     },
 
     showPopout: function () {
-      this.$el.fadeIn();
+      this.$el.fadeIn('fast');
     },
 
-    sendReviewCompleteRequest: function () {
-      var successCallback = this.successReviewComplete.bind(this);
+    sendReviewCompleteRequest: function (e) {
+      var successCallback = this.successReviewComplete.bind(this),
+          locationFacade = {
+            reload: window.navigate ?
+                    window.navigate.bind(window, location.href) :
+                    location.reload.bind(location)
+          }
+
+      $(e.target).attr('disabled', 'true');
+
       $.ajax({
         type: "POST",
         url: Backbone.siteRootUrl + "PostMortem/ReviewComplete",
@@ -57,13 +65,13 @@
         success: function (data) {
           PageAlert.success(data.message);
           if (data.isMoveWorkflow) {
-            window.location.reload();
+            setTimeout(locationFacade.reload, 3500);
           } else {
             successCallback(data);
           }
         },
         error: function (err) {
-          PageAlert.error(data.message);
+          PageAlert.error(err.responseText.message);
           console.log('error: ' + err);
         }
       });
