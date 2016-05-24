@@ -2,10 +2,11 @@
   'jquery',
   'underscore',
   'backbone',
-  './views/post-mortem'
-], function ($, _, Backbone, PostMortemView) {
+  './views/post-mortem',
+  './views/workflows'
+], function ($, _, Backbone, PostMortemView, WorkflowsView) {
 
-  var initialize = function () {
+  function init () {
     Backbone.siteRootUrl = $('#site-root-url').attr('data-root-url');
 
     var incident = {
@@ -20,10 +21,26 @@
     }
     Backbone.incident = incident;
     Backbone.user = user;
+  }
 
-    var postMortem = new PostMortemView();
-    postMortem.render();
+  function route() {
+    var href = window.location.href.toLowerCase();
+
+    if (href.indexOf('PostMortem') >= 0) {
+      var postMortem = new PostMortemView();
+      postMortem.render();
+    } else if (href.indexOf('participant') >= 0) {
+      var workflows = new WorkflowsView();
+      workflows.render();
+    }
+  }
+
+  var initialize = function () {
+    init();
+    route();
   };
+
+  
 
   return {
     initialize: initialize

@@ -305,9 +305,12 @@ h2 {
 
 
 // ================================= Hit Messages ============================
-.hit-messages {
 
-}
+.hint {
+	padding: 5px 10px;
+	color: $grey;
+	font-size: 1rem;
+}//hit
 
 .error-message {
 	display: inline-block;

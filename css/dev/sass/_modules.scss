@@ -1129,12 +1129,6 @@ ul.tabs {
 		}//th label, td label
 	}//table
 
-	.hint {
-		padding: 5px 10px;
-		color: $grey;
-		font-size: 1rem;
-	}//hit
-
 }//popout-window
 
 #workflow-end-date {
@@ -1484,6 +1478,28 @@ table.checkbox-table {
 
 
 
+
+// =========================================================================
+// =========================================================================
+// ============================== workflows ================================
+// =========================================================================
+// =========================================================================
+
+#workflows-app {
+	.create-workflow-wrapper {
+		margin: 30px auto;
+	}
+
+	.list-group-item {
+		position: relative;
+
+		.hint {
+			position: absolute;
+			top: 6px;
+			right: 20px;
+		}
+	}
+}
 
 
 
