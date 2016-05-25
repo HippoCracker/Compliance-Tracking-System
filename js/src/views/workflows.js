@@ -4,6 +4,7 @@
   'backbone',
   '../utils/custom-tagit',
   '../utils/animation',
+  'jquery.ui.slider'
 ], function ($, _, Backbone, Tagit, Animation) {
 
   var WorkflowsView = Backbone.View.extend({
@@ -31,7 +32,8 @@
     },
 
     render: function () {
-
+      var options = this._sliderConfig;
+      this.$sliderContainer.slider(options);
 
     },
 
@@ -107,6 +109,16 @@
       }
     },
 
+    _sliderConfig: {
+      range: true,
+      min: 0,
+      max: 14,
+      step: 5,
+      values: [2, 4],
+      slide: function (event, ui) {
+        console.log('sliding');
+      }
+    }
 
   });
 
