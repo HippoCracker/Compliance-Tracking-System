@@ -26,7 +26,7 @@
   function route() {
     var href = window.location.href.toLowerCase();
 
-    if (href.indexOf('PostMortem') >= 0) {
+    if (href.indexOf('postmortem') >= 0) {
       var postMortem = new PostMortemView();
       postMortem.render();
     } else if (href.indexOf('participant') >= 0) {

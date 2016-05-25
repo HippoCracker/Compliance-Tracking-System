@@ -150,7 +150,7 @@
       showResultFunc = _.partial(showResultFunc, _, [sendBtn]);
       
       if (isValid) {
-        sendBtn.setAttribute('disabled', 'true');x
+        sendBtn.setAttribute('disabled', 'true');
 
         _.each(selectedCheckboxes, function (checkbox) {
           toAddressArray.push(checkbox.value);

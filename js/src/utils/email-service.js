@@ -19,7 +19,7 @@
     getEmailContent: function (data, callback) {
       var url = this._getUrl();
 
-      if (!this.isValid(data))
+      if (!this._isValid(data))
         throw new Error("Invalid data parameter in method: getContent, class: email-service");
 
       $.ajax({
@@ -35,7 +35,7 @@
       });
     },
 
-    isValid: function(data) {
+    _isValid: function(data) {
       var incidentId = data.incidentId,
           workflowType = data.workflowType,
           receivers = data.receivers;
@@ -46,7 +46,17 @@
     },
 
     send: function (incidentId, emailData, callback) {
-      var url = this.getSendEmailUrl();
+      var
+        toAddress = emailData.ToAddress,
+        ccAddress = emailData.CCAddress,
+        emailAddresses = [toAddress, ccAddress].join(),
+        isValid = this.validateEmail(emailAddresses),
+        url = this.getSendEmailUrl();
+
+      if (!isValid) {
+        PageAlert.error('Invalid email address of the receiver');
+        return;
+      }
 
       if (emailData.SystemMessageBody !== void 0) {
         delete emailData.SystemMessageBody;
@@ -69,6 +79,27 @@
           console.log('err:' + err);
         }
       });
+    },
+
+    validateEmail: function (email) {
+      var isValid = true;
+      $.ajax({
+        async: false,
+        url: citsGlobal.baseUrl() + "Email/ValidateEmailInput",
+        data: { emailData: email },
+        type: "post",
+        success: function (result) {
+          if (result == "True") {
+            isValid = true;
+          } else {
+            isValid = false;
+          }
+        },
+        error: function (e) {
+          PageAlert.error("error occurred while validating emails. " + e);
+        }
+      });
+      return isValid;
     },
 
     _getUrl: function () {

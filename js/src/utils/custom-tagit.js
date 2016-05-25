@@ -40,10 +40,13 @@
       $('.ui-autocomplete-input').prop('disabled', false); 
     },
 
-    update: function() {
-      var $elem = this.$elem,
-          values = $elem.val();
+    update: function(values) {
+      var $elem = this.$elem;
+      if (values == void 0) {
+        values = $elem.val();
+      }
 
+      this.clear();
       this._addValueToTag(values);
     },
 

@@ -1,0 +1,115 @@
+﻿@using System.Web.Optimization
+@using GMO.CITS.Helpers
+@using GMO.CITS.Models
+@using GMO.CITS.Shared
+@model GMO.CITS.Models.ParticipantViewModel
+
+@Styles.Render("~/postmortemNewStyle")
+
+@section Styles
+{
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+}
+<div id="workflows-app">
+  <div id="page-level-alert" class="page-level-alert"></div>
+  <span id="site-root-url" class="hidden" data-root-url="@WebHelper.SiteBaseUrl()"></span>
+  <header class="page-head" id="status">
+    <div class="wrapper">
+
+      <div class="title-container">
+        @{
+            var tabViewModel = new TabViewModel { SelectedTab = TabViewModel.TabName.Workflows, ShowAllTabs = User.CheckAccess(PermissionType.ViewFullUI), Access = Model.Access };
+            Html.RenderPartial("_TitleBar");
+        }
+      </div><!-- title-container -->
+
+      @{ Html.RenderPartial("_TabNavigation", tabViewModel); }
+    </div><!-- wrapper -->
+  </header>
+  <div class="container">
+    <section id="create-workflow-container" class="create-workflow-wrapper shadow-container">
+      <header>
+        <span class="h2 hint">Current Workflow: <strong>@Model.WorkflowType</strong></span>
+        <button type="button" id="toggle-form-btn" class="btn green-btn btn-lg f-right">New Workflow</button>
+      </header>
+      <form id="new-workflow-form">
+        <div class="alert alert-info">Please select <strong>Workflow Type</strong> you want to create.</div>
+        <div class="form-group">
+          <label for="workflowTypeDropdown">Workflow Type:</label>
+          <select id="workflowTypeDropdown" class="form-control" name="workflowType">
+            <option value="-1" selected>-- None --</option>
+            @foreach (WorkflowTypeEnum type in Enum.GetValues(typeof(WorkflowTypeEnum)))
+            {
+              if (type == WorkflowTypeEnum.Closed
+              || type == WorkflowTypeEnum.Distribution
+              || type == WorkflowTypeEnum.ComplianceReviewForCCO
+              || type == WorkflowTypeEnum.ComplianceReviewForLegal
+              || type == WorkflowTypeEnum.ComplianceReviewForWorkingGroup)
+              {
+                continue;
+              }
+              var index = (int)type;
+                <option value="@index">@type.ToDescription()</option>
+            }
+          </select>
+        </div><!-- form-group -->
+        <div class="form-group">
+          <label for="workflow-participants">Participants: </label>
+          <input type="text" id="workflow-participants" class="hidden tagit-input" disabled>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-6">
+            <label for="workflow-duration">Duration (Day):</label>
+            <select id="workflow-duration" class="form-control" disabled></select>
+            <span id="duration-label" class="hint"> </span>
+          </div>
+          <div class="form-group col-sm-6">
+            <label for="alert-threshold">Alert Threshold (Day):</label>
+            <select id="alert-threshold" class="form-control" disabled></select>
+          </div>
+          <div id="slider-container"></div>
+        </div><!-- row -->
+        <button type="button" id="create-workflow-btn" class="btn green-btn btn-lg" disabled>Create</button>
+      </form>
+    </section>
+    <section id="workflow-container" class="list-group">
+      @foreach (var workflow in Model.workflows)
+      {
+        string endDate = "";
+        string endDateLabel = "";
+        var names = string.Join(",", workflow.Participants.Select(x => x.Identity(IdentityFormat.NameOnly)));
+
+        if (workflow.WorkflowSortOrder == Model.CurrentWorkflowOrderIndex)
+        {
+          endDate = workflow.EstimatedEndDate.ToString(DateTimeFormat.USFormatDate);
+          endDateLabel = "Estimated End: ";
+        }
+        else if (workflow.WorkflowSortOrder < Model.CurrentWorkflowOrderIndex)
+        {
+          endDate = workflow.ActualEndDate.ToString(DateTimeFormat.USFormatDate);
+          endDateLabel = "End Date: ";
+
+        }
+          <a href="#" class="list-group-item">
+            <h4 class="list-group-item-heading"><span class="index">@workflow.WorkflowSortOrder.</span>@workflow.WorkflowName</h4>
+            <span class="hint">@endDateLabel<strong>@endDate</strong></span>
+            <input type="text" value="@names">
+          </a>
+      }
+    </section>
+  </div><!-- .container -->
+
+  <div id="backtop-btn-container" class="side-btn-container right-side">
+    <button id="backtop-btn" class="side-btn backtop-btn"><i class="fa fa-arrow-up"></i></button>
+  </div><!-- side-btn -->
+</div>
+
+@section FooterScript
+{
+  <script>
+    window.baseSiteUrl = document.getElementsByClassName('base-site-url')[0].innerHTML;
+  </script>
+  <script data-main="@WebHelper.SiteBaseUrl()Scripts/post-mortem/src/main" src="@WebHelper.SiteBaseUrl()Scripts/post-mortem/src/require.js"></script>
+}
+

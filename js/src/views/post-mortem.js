@@ -36,7 +36,8 @@
       'click .email-reminder-btn': 'displayEmailPopout',
       'click .email-lastcall-btn': 'displayEmailPopout',
       'click #show-status-details-btn': 'showStagesDetail',
-      'click .close-status-detail-btn': 'hideStagesDetail'
+      'click .close-status-detail-btn': 'hideStagesDetail',
+      
     },
 
     initialize: function () {
@@ -44,6 +45,22 @@
       this.pageNav = new Navigation({ model: this.navTags });
       this.$showStagesDetailBtn = $('#show-status-details-btn');
       $(window).scroll(toggleComponents)
+
+      $(".case-status-text").hover(
+      	function() {
+      	  $dropdown = $(this).find(".case-status-detail-wrapper");
+      	  $dropdown.show();
+      		var width = $dropdown.width();
+      		var defaultOffsetLeft = $(document).width() - width - 100;
+      		var offset = $dropdown.offset();
+      		if (offset != void 0 && offset.left > defaultOffsetLeft) {
+      		  $dropdown.offset({ left: defaultOffsetLeft });
+      		}
+      	},
+      	function() {
+      		$(this).find(".case-status-detail-wrapper").hide();
+      	}
+      );
     },
 
     render: function () {
@@ -116,7 +133,7 @@
       var $btn = this.$showStagesDetailBtn;
       $btn.trigger('click');
       $('#close-status-detail-container').css('top', -20);
-    }
+    },
 
   });
 
