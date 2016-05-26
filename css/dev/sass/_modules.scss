@@ -1488,7 +1488,29 @@ table.checkbox-table {
 #workflows-app {
 	.create-workflow-wrapper {
 		margin: 30px auto;
-	}
+		@include cf;
+		
+		header {
+			button {
+				width: 140px;
+			}
+		}
+
+		.hint {
+			display: inline-block;
+			height: 24px;
+
+		}//.hint
+
+		form {
+			padding: 14px 8px;
+			border-top: 1px solid $lightgrey;
+		}
+
+		#new-workflow-form {
+			display: none;
+		}
+	}//.create-workflow-wrapper
 
 	.list-group-item {
 		position: relative;
@@ -1498,8 +1520,25 @@ table.checkbox-table {
 			top: 6px;
 			right: 20px;
 		}
+
+		.icon {
+			display: none;
+			position: absolute;
+			left: -44px;
+    	top: 21px;
+    	color: $green;
+    	font-size: 1.8rem;
+		}
+
+	}//.list-group-item
+
+	.list-group-item.workflow-done {
+		.icon {
+			display: block
+		}
 	}
-}
+}//#workflows-app
+
 
 
 
