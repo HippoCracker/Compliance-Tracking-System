@@ -2,10 +2,11 @@
   'jquery',
   'underscore',
   'backbone',
+  './_workflows-exist',
   '../utils/custom-tagit',
   '../utils/animation',
   './page-alert'
-], function ($, _, Backbone, Tagit, Animation, PageAlert) {
+], function ($, _, Backbone, WorkflowsExistView, Tagit, Animation, PageAlert) {
 
   var WorkflowsView = Backbone.View.extend({
 
@@ -38,6 +39,8 @@
       this.$sliderContainer = this.$el.find('#slider-container');
 
       this.participantsNameTagit    = new Tagit('#workflow-participants', { afterTagAdded: validation, afterTagRemoved: validation });
+
+      new WorkflowsExistView();
     },
 
     render: function () {

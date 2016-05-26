@@ -1524,10 +1524,10 @@ table.checkbox-table {
 		.icon {
 			display: none;
 			position: absolute;
-			left: -44px;
-    	top: 21px;
+			left: -42px;
+    	top: 28px;
     	color: $green;
-    	font-size: 1.8rem;
+    	font-size: 1.6rem;
 		}
 
 	}//.list-group-item
@@ -1537,10 +1537,35 @@ table.checkbox-table {
 			display: block
 		}
 	}
+	.list-group-item.workflow-current {
+		border: 2px solid $blue;
+		margin-bottom: 0;
+		border-radius: $default-border-radius;
+		.icon {
+			display: block;
+			color: $blue;
+			font-size: 1.8rem;
+		}
+	}
 }//#workflows-app
 
 
+#exist-workflow-container {
+	ul.tagit.ui-widget {
+		border: none;
+		background: transparent;
 
+		li {
+			display: inline-block;
+		}
+
+		.tagit-new {
+			input {
+				background: transparent;
+			}
+		}//.tagit-new
+	}//ul.tagit.ui-widget
+}//#exist-workflow-container
 
 
 
