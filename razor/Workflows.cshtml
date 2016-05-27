@@ -30,30 +30,42 @@
   <div class="container">
     <section id="create-workflow-container" class="create-workflow-wrapper shadow-container">
       <header>
-        <span class="h2 hint">Current Workflow: <strong>@Model.WorkflowType</strong></span>
-        <button type="button" id="toggle-form-btn" class="btn green-btn btn-lg f-right">New Workflow</button>
+        <span class="h2 hint">Current Step: <strong>@Model.WorkflowType</strong></span>
+        <button type="button" id="toggle-form-btn" class="btn green-btn btn-lg f-right">New Step</button>
       </header>
       <form id="new-workflow-form">
         <div class="alert alert-info">Please select <strong>Workflow Type</strong> you want to create.</div>
-        <div class="form-group">
-          <label for="workflowTypeDropdown">Workflow Type:</label>
-          <select id="workflowTypeDropdown" class="form-control" name="workflowType">
-            <option value="-1" selected>-- None --</option>
-            @foreach (WorkflowTypeEnum type in Enum.GetValues(typeof(WorkflowTypeEnum)))
-            {
-              if (type == WorkflowTypeEnum.Closed
-              || type == WorkflowTypeEnum.Distribution
-              || type == WorkflowTypeEnum.ComplianceReviewForCCO
-              || type == WorkflowTypeEnum.ComplianceReviewForLegal
-              || type == WorkflowTypeEnum.ComplianceReviewForWorkingGroup)
+        <div class="row">
+          <div class="form-group col-sm-6">
+            <label for="workflowTypeDropdown">Workflow Type:</label>
+            <select id="workflowTypeDropdown" class="form-control" name="workflowType">
+              <option value="-1" selected>-- None --</option>
+              @foreach (WorkflowTypeEnum type in Enum.GetValues(typeof(WorkflowTypeEnum)))
               {
-                continue;
+                if (type == WorkflowTypeEnum.Closed
+                || type == WorkflowTypeEnum.Distribution
+                || type == WorkflowTypeEnum.ComplianceReviewForCCO
+                || type == WorkflowTypeEnum.ComplianceReviewForLegal
+                || type == WorkflowTypeEnum.ComplianceReviewForWorkingGroup)
+                {
+                  continue;
+                }
+                var index = (int)type;
+                  <option value="@index">@type.ToDescription()</option>
               }
-              var index = (int)type;
-                <option value="@index">@type.ToDescription()</option>
-            }
-          </select>
-        </div><!-- form-group -->
+            </select>
+          </div><!-- form-group -->
+          <div class="form-group col-sm-6">
+            <label for="workflow-order">Order:</label>
+            <select id="workflow-order" class="form-control" disabled>
+              @for (var i = Model.CurrentWorkflowOrderIndex + 1; i <= Model.workflows.Count(); i++)
+              {
+                  <option value="@i">@i</option>
+              }
+            </select>
+          </div>
+        </div><!--row-->
+
         <div class="form-group">
           <label for="workflow-participants">Participants: </label>
           <input type="text" id="workflow-participants" class="hidden tagit-input" disabled>
@@ -62,7 +74,6 @@
           <div class="form-group col-sm-6">
             <label for="workflow-duration">Duration (Day):</label>
             <select id="workflow-duration" class="form-control" disabled></select>
-            <span id="duration-label" class="hint"> </span>
           </div>
           <div class="form-group col-sm-6">
             <label for="alert-threshold">Alert Threshold (Day):</label>
@@ -73,28 +84,36 @@
         <button type="button" id="create-workflow-btn" class="btn green-btn btn-lg" disabled>Create</button>
       </form>
     </section>
-    <section id="workflow-container" class="list-group">
+    <section id="exist-workflow-container" class="list-group">
       @foreach (var workflow in Model.workflows)
       {
         string endDate = "";
         string endDateLabel = "";
-        var names = string.Join(",", workflow.Participants.Select(x => x.Identity(IdentityFormat.NameOnly)));
+        string className = "";
+        string iconName = "";
+        var names = string.Join(",", workflow.Participants.Select(x => x.Identity(IdentityFormat.NameAndEmail)));
 
         if (workflow.WorkflowSortOrder == Model.CurrentWorkflowOrderIndex)
         {
           endDate = workflow.EstimatedEndDate.ToString(DateTimeFormat.USFormatDate);
           endDateLabel = "Estimated End: ";
+          className = "workflow-current";
+          iconName = "fa-arrow-right";
         }
         else if (workflow.WorkflowSortOrder < Model.CurrentWorkflowOrderIndex)
         {
           endDate = workflow.ActualEndDate.ToString(DateTimeFormat.USFormatDate);
           endDateLabel = "End Date: ";
-
+          className = "workflow-done";
+          iconName = "fa-check";
         }
-          <a href="#" class="list-group-item">
+          <a href="#" class="list-group-item @className">
+            <div class="disable-mask"></div>
+            <span class="icon status-icon"><i class="fa @iconName" aria-hidden="true"></i></span>
+            <span class="icon close-icon"><i class="fa fa-times"></i></span>
             <h4 class="list-group-item-heading"><span class="index">@workflow.WorkflowSortOrder.</span>@workflow.WorkflowName</h4>
             <span class="hint">@endDateLabel<strong>@endDate</strong></span>
-            <input type="text" value="@names">
+            <input type="text" class="participant-name-input hidden" value="@names" readonly>
           </a>
       }
     </section>

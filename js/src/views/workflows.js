@@ -16,6 +16,7 @@
       'click #toggle-form-btn': 'toggleForm',
       'click #create-workflow-btn': 'createWorkflow',
       'click .list-group-item': 'displayWorkflowDetail',
+      'click .disable-mask': 'showNotEditableWarning',
       'change #workflowTypeDropdown': 'fetchWorkflowData',
 
     },
@@ -94,7 +95,7 @@
       var $btn = $(e.target);
       if ($btn.html() === 'Cancel') {
         Animation.toggleUp('#new-workflow-form');
-        $btn.html('New Workflow');
+        $btn.html('New Step');
         $btn.addClass('green-btn');
         $btn.removeClass('blue-btn')
       } else {
@@ -172,6 +173,10 @@
       $elem.val(select);
       $elem.removeAttr('disabled');
     },
+
+    showNotEditableWarning: function () {
+      PageAlert.warning('You can not edit steps already completed.')
+    }
 
     //_sliderConfig: {
     //  range: true,

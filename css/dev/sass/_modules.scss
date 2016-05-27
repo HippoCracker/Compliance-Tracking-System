@@ -1512,41 +1512,7 @@ table.checkbox-table {
 		}
 	}//.create-workflow-wrapper
 
-	.list-group-item {
-		position: relative;
 
-		.hint {
-			position: absolute;
-			top: 6px;
-			right: 20px;
-		}
-
-		.icon {
-			display: none;
-			position: absolute;
-			left: -42px;
-    	top: 28px;
-    	color: $green;
-    	font-size: 1.6rem;
-		}
-
-	}//.list-group-item
-
-	.list-group-item.workflow-done {
-		.icon {
-			display: block
-		}
-	}
-	.list-group-item.workflow-current {
-		border: 2px solid $blue;
-		margin-bottom: 0;
-		border-radius: $default-border-radius;
-		.icon {
-			display: block;
-			color: $blue;
-			font-size: 1.8rem;
-		}
-	}
 }//#workflows-app
 
 
@@ -1565,6 +1531,70 @@ table.checkbox-table {
 			}
 		}//.tagit-new
 	}//ul.tagit.ui-widget
+
+	.list-group-item {
+		position: relative;
+
+		.hint {
+			position: absolute;
+			top: 6px;
+			right: 50px;
+		}
+
+		.status-icon {
+			display: none;
+			position: absolute;
+			left: -42px;
+    	top: 28px;
+    	color: $green;
+    	font-size: 1.6rem;
+		}
+
+		.close-icon {
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 36px;
+			height: 36px;
+			line-height: 36px;
+			cursor: pointer;
+			color: lighten($grey, 10%);
+			font-size: 1.4rem;
+			text-align: center;
+
+			&:hover {
+				color: $red;
+			}
+		}
+
+	}//.list-group-item
+
+	.list-group-item.workflow-done {
+		cursor: not-allowed;
+		
+		.status-icon {
+			display: block
+		}
+
+		.disable-mask {
+			position: absolute;
+	    top: 0;
+	    left: 0;
+	    width: 100%;
+	    height: 100%;
+		}
+
+	}
+	.list-group-item.workflow-current {
+		border: 2px solid $blue;
+		margin-bottom: 0;
+		border-radius: $default-border-radius;
+		.status-icon {
+			display: block;
+			color: $blue;
+			font-size: 1.8rem;
+		}
+	}
 }//#exist-workflow-container
 
 
