@@ -34,6 +34,10 @@
     // Format Mask: http://blog.stevenlevithan.com/archives/date-time-format
     DATE_FORMAT: {
       LiteralUSFormatDate: 'mmm. dd yyyy'
+    },
+
+    CONTROLLER_ACTION: {
+      DeleteWorkflow: 'postmortem/deleteworkflow',
     }
   }
 

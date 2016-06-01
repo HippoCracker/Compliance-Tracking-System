@@ -8,7 +8,11 @@
   var CustomTagit = function (elem, options) {
     if (!options) options = {};
     if (!options.tagSource) {
-      options.tagSource = this.getTagSource;
+      options.tagSource = this._getTagSource;
+    }
+
+    if (!options.formatLabel) {
+      options.formatLabel = this._formatLabel;
     }
 
     if (options.validateFunc) {
@@ -74,7 +78,7 @@
       });
     },
 
-    getTagSource: function (request, response) {
+    _getTagSource: function (request, response) {
       var maxTags = this.maxTags || 50;
       $.ajax({
         type: "POST",
@@ -96,6 +100,13 @@
         }
       }); 
     },
+
+    _formatLabel: function (value) {
+      if (value.indexOf(' [') > 0) {
+        value =  value.split(' [')[0];
+      }
+      return value;
+    }
 
   });
 
