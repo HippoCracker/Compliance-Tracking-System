@@ -91,7 +91,8 @@
             afterTagRemoved     : null,
 
             onTagClicked        : null,
-            onTagLimitExceeded  : null,
+            onTagLimitExceeded: null,
+            formatLabel: null,
 
 
             // DEPRECATED:
@@ -466,7 +467,12 @@
                 return false;
             }
 
+            var temp = value;
+            if (typeof this.options.formatLabel === 'function') {
+              value = this.options.formatLabel(value)
+            }
             var label = $(this.options.onTagClicked ? '<a class="tagit-label"></a>' : '<span class="tagit-label"></span>').text(value);
+            value = temp;
 
             // Create tag.
             var tag = $('<li></li>')
@@ -545,7 +551,11 @@
             if (this.options.singleField) {
                 var tags = this.assignedTags();
                 var removedTagLabel = this.tagLabel(tag);
-                tags = $.grep(tags, function(el){
+                var formatLabel = this.options.formatLabel;
+                tags = $.grep(tags, function (el) {
+                    if (typeof formatLabel === 'function') {
+                      el = formatLabel(el)
+                    }
                     return el != removedTagLabel;
                 });
                 this._updateSingleTagsField(tags);
