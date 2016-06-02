@@ -19,7 +19,7 @@
 
       <div class="title-container">
         @{
-            var tabViewModel = new TabViewModel { SelectedTab = TabViewModel.TabName.Workflows, ShowAllTabs = User.CheckAccess(PermissionType.ViewFullUI), Access = Model.Access };
+            var tabViewModel = new TabViewModel { SelectedItemId = Model.IncidentId, SelectedTab = TabViewModel.TabName.Workflows, ShowAllTabs = User.CheckAccess(PermissionType.ViewFullUI), Access = Model.Access };
             Html.RenderPartial("_TitleBar");
         }
       </div><!-- title-container -->
@@ -107,14 +107,22 @@
           className = "workflow-done";
           iconName = "fa-check";
         }
-          <a href="#" class="list-group-item @className">
-            <div class="disable-mask"></div>
-            <span class="icon status-icon"><i class="fa @iconName" aria-hidden="true"></i></span>
-            <span class="icon close-icon"><i class="fa fa-times"></i></span>
-            <h4 class="list-group-item-heading"><span class="index">@workflow.WorkflowSortOrder.</span>@workflow.WorkflowName</h4>
-            <span class="hint">@endDateLabel<strong>@endDate</strong></span>
-            <input type="text" class="participant-name-input hidden" value="@names" readonly>
-          </a>
+        <div href="#" class="list-group-item @className">
+          <div class="disable-mask"></div>
+          <span class="icon status-icon"><i class="fa @iconName" aria-hidden="true"></i></span>
+          <span class="icon delete-icon"><i class="fa fa-times"></i></span>
+          <h4 class="list-group-item-heading"><span class="index">@workflow.WorkflowSortOrder</span> @workflow.WorkflowName</h4>
+          @if (workflow.WorkflowTypeId != (int)WorkflowTypeEnum.Closed)
+          {
+              <div class="btn-container">
+                <button type="button" class="save-btn btn blue-btn btn-sm">Save</button>
+                <button type="button" class="cancel-btn btn btn-default btn-sm">Cancel</button>
+              </div>
+              <span class="hint">@endDateLabel<strong>@endDate</strong></span>
+              <input type="text" class="participant-name-input hidden" data-backup="@names" value="@names" readonly>
+              <input type="hidden" class="workflow-order" name="workflow-order" value="@workflow.WorkflowSortOrder">
+          }
+        </div>
       }
     </section>
   </div><!-- .container -->

@@ -1535,6 +1535,23 @@ table.checkbox-table {
 	.list-group-item {
 		position: relative;
 
+		h4,
+		.btn-container {
+			display: inline-block;
+		}
+
+		.btn-container {
+			display: none;
+			margin-left: 10px;
+		}
+		
+		.save-btn,
+		.cancel-btn {
+			height: 24px;
+			line-height: 1;
+			margin: 0;
+		}
+
 		.hint {
 			position: absolute;
 			top: 6px;
@@ -1550,7 +1567,7 @@ table.checkbox-table {
     	font-size: 1.6rem;
 		}
 
-		.close-icon {
+		.delete-icon {
 			position: absolute;
 			top: 0;
 			right: 0;

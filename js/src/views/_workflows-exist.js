@@ -20,10 +20,14 @@
 
     events: {
       'click .delete-icon': 'deleteWorkflow',
+      'click .save-btn': 'saveParticipants',
+      'click .cancel-btn': 'undoParticipants',
     },
 
     initialize: function () {
-      var participantNameInputTagit = new Tagit('.participant-name-input');
+      var changeCallback = this.showSaveCancelBtn.bind(this),
+          tagitOptions = { afterTagAdded: changeCallback, afterTagRemoved: changeCallback };
+      var participantNameInputTagit = new Tagit('.participant-name-input', tagitOptions);
       this.$el.find('.ui-autocomplete-input').attr('placeholder', '+');
     },
 
@@ -73,9 +77,40 @@
       });
     },
 
+    saveParticipants: function (e) {
+      var $btnConatiner = $(e.target).parent(),
+          $participantNameInput = $btnConatiner.siblings('.participant-name-input'),
+          previousParticipants = $participantNameInput.attr('data-backup'),
+          currentParticipants = $participantNameInput.val();
 
 
-  })
+
+      $btnConatiner.fadeOut();
+    },
+
+    undoParticipants: function (e) {
+      var $btnConatiner = $(e.target).parent(),
+          $participantNameInput = $btnConatiner.siblings('.participant-name-input'),
+          previousParticipants = $participantNameInput.attr('data-backup');
+
+      new Tagit($participantNameInput).update(previousParticipants);
+      $btnConatiner.fadeOut();
+    },
+
+    showSaveCancelBtn: function (event, ui) {
+      var $participantInput = $(event.target),
+          $btnContainer = $participantInput.siblings('.btn-container'),
+          previousParticipants = $participantInput.attr('data-backup'),
+          newParticipants = $participantInput.val();
+
+      if (previousParticipants === newParticipants) {
+        $btnContainer.css('display', 'none');
+      } else {
+        $btnContainer.css('display', 'inline-block');
+      }
+    }
+
+  });
 
   return WorkflowExistView;
 });
