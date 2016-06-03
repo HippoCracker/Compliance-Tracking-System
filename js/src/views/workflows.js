@@ -5,8 +5,9 @@
   './_workflows-exist',
   '../utils/custom-tagit',
   '../utils/animation',
-  './page-alert'
-], function ($, _, Backbone, WorkflowsExistView, Tagit, Animation, PageAlert) {
+  './page-alert',
+  'text!templates/workflow-item-template.html'
+], function ($, _, Backbone, WorkflowsExistView, Tagit, Animation, PageAlert, WorkflowItemTemplate) {
 
   var WorkflowsView = Backbone.View.extend({
 
@@ -35,7 +36,7 @@
 
       this.participantsNameTagit    = new Tagit('#workflow-participants', { afterTagAdded: validation, afterTagRemoved: validation });
 
-      new WorkflowsExistView();
+      this.workflowExistView = new WorkflowsExistView();
     },
 
     render: function () {
@@ -43,39 +44,41 @@
     },
 
     createWorkflow: function() {
-      var
-        workflowData = this._getNewWorkflowData(),
-        locationFacade = {
-          reload: window.navigate ?
-                  window.navigate.bind(window, location.href) :
-                  location.reload.bind(location)
-        }
+      var workflowData = this._getNewWorkflowData(),
+          addTag = this.addTag.bind(this);
 
       $.ajax({
         type: 'post',
-        url: Backbone.siteRootUrl + 'PostMortem/CreatNewWorkflow',
+        url: Backbone.siteRootUrl + 'participant/CreatNewWorkflow',
         data: JSON.stringify(workflowData),
         contentType: 'application/json; charset=utf-8',
       }).done(function (data) {
         PageAlert.success(data.workflow.workflowName + ' workflow created successfully');
         $('#toggle-form-btn').trigger('click');
-        setTimeout(locationFacade.reload, 3000);
+        addTag(workflowData);
       }).fail(function (err) {
         PageAlert.error(err.message);
       });
+    },
+
+    addTag: function(data) {
+      var template = _.template(WorkflowItemTemplate);
+      var tagHtml = template(data);
+      this.workflowExistView.addListTag(tagHtml, data.orderIndex);
     },
 
     _getNewWorkflowData: function() {
       var
         incidentId = Backbone.incident.incidentId,
         workflowTypeId = this.$workflowDropdown.val(),
+        workflowName = this.$workflowDropdown.find(":selected").text(),
         duration = this.$durationDropdown.val(),
         alertThreshold = this.$alertThresholdDropdown.val(),
         orderIndex = this.$orderDropDown.val();
         participants = $('#workflow-participants').val();
 
       return {
-        incidentId: incidentId, workflowTypeId: workflowTypeId, duration: duration,
+        incidentId: incidentId, workflowTypeId: workflowTypeId, workflowName: workflowName, duration: duration,
         alertThreshold: alertThreshold, participants: participants, orderIndex: orderIndex
       };
 
@@ -171,17 +174,6 @@
     showNotEditableWarning: function () {
       PageAlert.warning('You can not edit steps already completed.')
     }
-
-    //_sliderConfig: {
-    //  range: true,
-    //  min: 1,
-    //  max: 14,
-    //  step: 7,
-    //  values: [2, 4],
-    //  slide: function (event, ui) {
-    //    console.log('sliding');
-    //  }
-    //}
 
   });
 

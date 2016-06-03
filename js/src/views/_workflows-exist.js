@@ -20,9 +20,12 @@
 
     initialize: function () {
       var changeCallback = this.showSaveCancelBtn.bind(this),
-          tagitOptions = { afterTagAdded: changeCallback, afterTagRemoved: changeCallback };
-      var participantNameInputTagit = new Tagit('.participant-name-input', tagitOptions);
+          tagitOptions = { afterTagAdded: changeCallback, afterTagRemoved: changeCallback },
+          participantNameInputTagit = new Tagit('.participant-name-input', tagitOptions);
+
       this.$el.find('.ui-autocomplete-input').attr('placeholder', '+');
+
+      this.tagitOptions = tagitOptions;
     },
 
     render: function () {
@@ -53,6 +56,18 @@
       });
     },
 
+    addListTag: function (elem, order) {
+      $elem = $(elem).css('display', 'none');
+
+      var tagitOptions = this.tagitOptions;
+      var listItem = this.$el.find('.list-group-item')[order -1];
+      $(listItem).before($elem);
+      var tag = this.$el.find('.list-group-item')[order - 1];
+      new Tagit($(tag).find('.participant-name-input'), tagitOptions);
+      Animation.toggleDown(tag);
+      this.refreshIndexAfterTag(tag, 1);
+    },
+
     removeListTag: function (elem) {
       Animation.toggleUp(elem);
       setTimeout($(elem).remove, 2000);
@@ -67,7 +82,7 @@
         $indexElems = $(elem).find('.index');
         $indexInput = $(elem).find('.workflow-order');
         $indexElems.text(Number($indexElems.text()) + increment);
-        $indexInput.val($indexInput + increment);
+        $indexInput.val(Number($indexInput.val()) + increment);
       });
     },
 
