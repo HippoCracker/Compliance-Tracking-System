@@ -12,12 +12,6 @@
 
     el: '#exist-workflow-container',
 
-    tempate: `<a href="#" class="list-group-item <%= className %>">
-                <h4 class="list-group-item-heading"><span class="index"><%= orderIndex %>.</span>@WorkflowName</h4>
-                <span class="hint"></span>
-                <input type="text" value="<%= participants %>">
-              </a>`,
-
     events: {
       'click .delete-icon': 'deleteWorkflow',
       'click .save-btn': 'saveParticipants',
@@ -80,12 +74,24 @@
     saveParticipants: function (e) {
       var $btnConatiner = $(e.target).parent(),
           $participantNameInput = $btnConatiner.siblings('.participant-name-input'),
-          previousParticipants = $participantNameInput.attr('data-backup'),
-          currentParticipants = $participantNameInput.val();
+          currentParticipants = $participantNameInput.val(),
+          incidentId = Backbone.incident.incidentId,
+          orderIndex = $btnConatiner.siblings('.workflow-order').val(),
+          data = { incidentId: incidentId, orderIndex: orderIndex, participants: currentParticipants },
+          url = Backbone.siteRootUrl + common.CONTROLLER_ACTION.SaveParticipants;
 
-
-
-      $btnConatiner.fadeOut();
+      $.ajax({
+        type: 'post',
+        url: url,
+        data: JSON.stringify(data),
+        contentType: 'application/json; charset=utf-8',
+      }).done(function (data) {
+        PageAlert.success(data.message);
+        $btnConatiner.fadeOut();
+        $participantNameInput.attr('data-backup', currentParticipants);
+      }).fail(function (err) {
+        PageAlert.error(err.message);
+      });
     },
 
     undoParticipants: function (e) {

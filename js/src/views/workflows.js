@@ -21,12 +21,6 @@
 
     },
 
-    listItemTemplate: `<a href="#" class="list-group-item <%= className %>">
-                         <h4 class="list-group-item-heading"><span class="index"><%= orderIndex %>.</span>@WorkflowName</h4>
-                         <span class="hint"></span>
-                         <input type="text" value="<%= participants %>">
-                       </a>`,
-
     initialize: function () {
       var validation = this.validateUserInputs.bind(this);
 

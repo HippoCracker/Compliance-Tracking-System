@@ -38,6 +38,7 @@
 
     CONTROLLER_ACTION: {
       DeleteWorkflow: 'postmortem/deleteworkflow',
+      SaveParticipants: 'participant/saveparticipants'
     }
   }
 
