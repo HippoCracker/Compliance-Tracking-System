@@ -1601,16 +1601,35 @@ table.checkbox-table {
 	    height: 100%;
 		}
 
-	}
+		.delete-icon {
+			display: none;
+		}
+
+	}//.list-group-item.workflow-done
+
 	.list-group-item.workflow-current {
-		border: 2px solid $blue;
+		border-left: 6px solid $blue;
+		padding-left: 9px;
 		margin-bottom: 0;
-		border-radius: $default-border-radius;
+		
 		.status-icon {
 			display: block;
 			color: $blue;
 			font-size: 1.8rem;
 		}
+
+		.delete-icon {
+			display: none;
+		}
+	}//.list-group-item.workflow-current
+
+	.list-group-item.workflow-new {
+		border: 2px solid $green;
+		border-radius: $default-border-radius;
+	}
+
+	.list-group-item {
+		transform: all .5s;
 	}
 }//#exist-workflow-container
 

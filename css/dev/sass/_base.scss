@@ -160,6 +160,15 @@ select.form-control {
 	top: 16px;
 }
 
+.btn.active.focus, 
+.btn.active:focus, 
+.btn.focus, 
+.btn:active.focus, 
+.btn:active:focus, 
+.btn:focus {
+	outline: 0;
+}
+
 button, 
 input[type="button"],
 input[type="submit"] {

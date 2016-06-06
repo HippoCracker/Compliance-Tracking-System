@@ -62,8 +62,12 @@
       var tagitOptions = this.tagitOptions;
       var listItem = this.$el.find('.list-group-item')[order -1];
       $(listItem).before($elem);
+
       var tag = this.$el.find('.list-group-item')[order - 1];
+      $(tag).addClass('workflow-new');
+      setTimeout(function () { $(tag).removeClass('workflow-new'); }, 5000);
       new Tagit($(tag).find('.participant-name-input'), tagitOptions);
+
       Animation.toggleDown(tag);
       this.refreshIndexAfterTag(tag, 1);
     },
