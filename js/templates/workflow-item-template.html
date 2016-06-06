@@ -1,0 +1,13 @@
+﻿<div href="#" class="list-group-item">
+  <div class="disable-mask"></div>
+  <span class="icon status-icon"><i class="fa" aria-hidden="true"></i></span>
+  <h4 class="list-group-item-heading"><span class="index"><%= orderIndex %></span> <%= workflowName %></h4>
+  <span class="icon delete-icon"><i class="fa fa-times"></i></span>
+  <div class="btn-container">
+    <button type="button" class="save-btn btn blue-btn btn-sm">Save</button>
+    <button type="button" class="cancel-btn btn btn-default btn-sm">Cancel</button>
+  </div>
+  <span class="hint"><strong></strong></span>
+  <input type="text" class="participant-name-input hidden" data-backup="<%= participants %>" value="<%= participants %>" readonly>
+  <input type="hidden" class="workflow-order" name="orderIndex-order" value="<%= orderIndex %>">
+</div>

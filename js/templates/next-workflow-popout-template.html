@@ -1,0 +1,69 @@
+﻿<div id="popout-window" class="confirm-popout popout-window shadow-container">
+  <header>
+    <h4>Select Next Step</h4>
+  </header>
+  <section id="next-workflow-section">
+    <h4>Next Workflow:</h4>
+    <div class="radio-btn-group">
+      <p class="row">
+        <span class="col-sm-6 radio-btn">
+          <input id="next-workflow-radio" class="workflow-radio" type="radio" name="createWorkflow" value="false" checked>
+          <label class="btn-label active" for="next-workflow-radio">Default Next: <strong class="next-workflow-name">@Model.NextWorkflow</strong></label>
+        </span>
+        <span class="col-sm-6 radio-btn">
+          <input id="create-workflow-radio" class="workflow-radio" type="radio" name="createWorkflow" value="true">
+          <label class="btn-label" for="create-workflow-radio">Create New Workflow</label>
+        </span>
+      </p>
+    </div>
+
+    <form id="new-workflow-settings-form">
+      <div id="create-workflow-alert-message" class="alert alert-info" role="alert">
+        <p>Default Next workflow: <strong>@Model.NextWorkflow</strong></p>
+        <p>-- You need to create workflow before submit your review.</p>
+        <p>-- Select Workflow Type you want to create.</p>
+      </div>
+      <div class="form-group">
+        <label for="workflowTypeDropdown">Workflow Type:</label>
+        <select id="workflowTypeDropdown" class="form-control" name="workflowType">
+          <option value="-1" selected>-- None --</option>
+          @foreach (WorkflowTypeEnum type in Enum.GetValues(typeof(WorkflowTypeEnum)))
+          {
+          if (type == WorkflowTypeEnum.Closed
+          || type == WorkflowTypeEnum.Distribution
+          || type == WorkflowTypeEnum.ComplianceReviewForCCO
+          || type == WorkflowTypeEnum.ComplianceReviewForLegal
+          || type == WorkflowTypeEnum.ComplianceReviewForWorkingGroup)
+          {
+          continue;
+          }
+          var index = (int)type;
+          <option value="@index">@type.ToDescription()</option>
+          }
+        </select>
+      </div><!-- form-group -->
+      <div class="form-group">
+        <label for="workflow-participants">Participants: </label>
+        <input id="workflow-participants" class="tagit-input form-control" type="text" name="participants" disabled>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-6">
+          <label for="workflow-end-date">End Date:</label>
+          <input type="text" class="form-control" id="workflow-end-date" readOnly>
+          <span id="duration-label" class="hint"> </span>
+        </div>
+        <div class="form-group col-sm-6">
+          <label for="alert-threshold">Alert Threshold(Day):</label>
+          <select id="alert-threshold" class="form-control" disabled></select>
+        </div>
+      </div><!-- row -->
+      <button type="button" id="create-workflow-btn" class="btn btn-primary btn-md" disabled>Create Workflow</button>
+    </form>
+  </section><!-- #next-workflow-section -->
+
+  <footer class="popout-btn-group btn-container cf">
+    <button id="popout-cancel-btn" class="cancel-btn btn-lg btn-default btn f-right">Cancel</button>
+    <button id="popout-submit-btn" class="green-btn btn-lg f-right">Move</button>
+  </footer>
+
+</div><!-- popout-window -->
