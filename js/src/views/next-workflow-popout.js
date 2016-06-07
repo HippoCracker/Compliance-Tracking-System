@@ -21,8 +21,17 @@
     },
 
     initialize: function () {
+      var $submitBtn = $('#popout-submit-btn');
+      var isLastWorkflow = this.$el.attr('data-is-last-workflow');
+
+      if (Boolean(isLastWorkflow)) {
+        $submitBtn.text('Close Incident');
+        $submitBtn.css('background', '#D76666');
+        this.$el.find('.hint').text('Current workflow is the last one, incident will be closed if continue.');
+      }
+
+      this.$submitBtn = $submitBtn;
       this.$cancelBtn = $('#popout-cancel-btn');
-      this.$submitBtn = $('#popout-submit-btn');
     },
 
     render: function () {
@@ -66,13 +75,13 @@
           PageAlert.success(data.message);
           if (data.isMoveWorkflow) {
             setTimeout(locationFacade.reload, 3500);
-          } else {
+          } else if(!data.isLastReviwer) {
             successCallback(data);
           }
         },
         error: function (err) {
-          PageAlert.error(err.responseText.message);
-          console.log('error: ' + err);
+          PageAlert.error("Error! " + err.responseText);
+          $(e.target).removeAttr('disabled');
         }
       });
     },

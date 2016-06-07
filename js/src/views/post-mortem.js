@@ -43,6 +43,7 @@
     initialize: function () {
       var toggleComponents = this.toggleComponents.bind(this);
       this.pageNav = new Navigation({ model: this.navTags });
+      this.submitPopout = new NextWorkflowPopoutView();
       this.$showStagesDetailBtn = $('#show-status-details-btn');
       $(window).scroll(toggleComponents)
 
@@ -94,8 +95,7 @@
     },
 
     showPopout: function () {
-      var popout = new NextWorkflowPopoutView();
-      popout.render();
+      this.submitPopout.render();
     },
 
     displayEmailPopout: function (e) {
