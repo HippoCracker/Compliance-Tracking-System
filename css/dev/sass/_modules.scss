@@ -315,14 +315,22 @@
 		letter-spacing: .05em;
 		padding-left: 12px;
 	}//deadline
+
+	.open-incident-btn {
+		position: relative;
+		top: -5px;
+	}
 }//personal-status-container
+
+.personal-status {
+	display: inline-block;
+}
 
 //-----------------------------------
 
 .page-level-btn {
 	text-align: left;
-	margin: 10px;
-	padding-bottom: 10px;
+	padding-bottom: 6px;
 	padding-left: 20px;
 }
 
@@ -345,6 +353,7 @@
 	position: relative;
 	padding-top: 6px;
 	padding-right: 20px;
+	display: none;
 
 	.status-head-wrapper:hover {
 		color: $darkgrey;
@@ -405,11 +414,9 @@
 	}//case-status-text
 
 	.status-process {
-		position: absolute;
-		top: 46px;
-		margin-left: 5%;
+		position: relative;
+		top: 42px;
 		display: block;
-		width: 900px;
 		height: 1px;
 	}//status-process
 
@@ -453,7 +460,7 @@
 .toggle-btn-container {
 	position: absolute;
 	top: 24px;
-	right: -8px;
+	right: -20px;
 	width: 48px;
 	height: 48px;
 	line-height: 48px;
@@ -1632,6 +1639,4 @@ table.checkbox-table {
 		transform: all .5s;
 	}
 }//#exist-workflow-container
-
-
 

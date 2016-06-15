@@ -15,6 +15,10 @@ $susy: (
 	width: 90%;
 }
 
+.container-fluid {
+	max-width: 1600px;
+}
+
 
 @media print {
 	#left-table-data,
