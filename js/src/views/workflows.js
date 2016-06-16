@@ -23,6 +23,11 @@
     },
 
     initialize: function () {
+      var closeTag = this.$el.find('.list-group-item').last();
+      if ($(closeTag).hasClass('workflow-current')) {
+        this.$el.find('#toggle-form-btn').attr('disabled', 'true');
+      }
+
       var validation = this.validateUserInputs.bind(this);
 
       this.$showFormBtn         = this.$el.find('#show-form-btn');
@@ -35,8 +40,9 @@
       this.$sliderContainer = this.$el.find('#slider-container');
 
       this.participantsNameTagit    = new Tagit('#workflow-participants', { afterTagAdded: validation, afterTagRemoved: validation });
-
       this.workflowExistView = new WorkflowsExistView();
+
+
     },
 
     render: function () {

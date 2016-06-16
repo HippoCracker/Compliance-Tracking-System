@@ -91,12 +91,13 @@
     },
 
     saveParticipants: function (e) {
-      var $btnConatiner = $(e.target).parent(),
-          $participantNameInput = $btnConatiner.siblings('.participant-name-input'),
+      var $btnContainer = $(e.target).parent(),
+          $participantNameInput = $btnContainer.siblings('.participant-name-input'),
           currentParticipants = $participantNameInput.val(),
           incidentId = Backbone.incident.incidentId,
-          orderIndex = $btnConatiner.siblings('.workflow-order').val(),
-          data = { incidentId: incidentId, orderIndex: orderIndex, participants: currentParticipants },
+          orderIndex = $btnContainer.siblings('.workflow-order').val(),
+          workflowTypeId = $btnContainer.siblings('.workflow-type-id').val(),
+          data = { incidentId: incidentId, workflowType: workflowTypeId, orderIndex: orderIndex, participants: currentParticipants },
           url = Backbone.siteRootUrl + common.CONTROLLER_ACTION.SaveParticipants;
 
       $.ajax({
@@ -106,20 +107,20 @@
         contentType: 'application/json; charset=utf-8',
       }).done(function (data) {
         PageAlert.success(data.message);
-        $btnConatiner.fadeOut();
+        $btnContainer.fadeOut();
         $participantNameInput.attr('data-backup', currentParticipants);
       }).fail(function (err) {
-        PageAlert.error(err.message);
+        PageAlert.error(err.responseText);
       });
     },
 
     undoParticipants: function (e) {
-      var $btnConatiner = $(e.target).parent(),
-          $participantNameInput = $btnConatiner.siblings('.participant-name-input'),
+      var $btnContainer = $(e.target).parent(),
+          $participantNameInput = $btnContainer.siblings('.participant-name-input'),
           previousParticipants = $participantNameInput.attr('data-backup');
 
       new Tagit($participantNameInput).update(previousParticipants);
-      $btnConatiner.fadeOut();
+      $btnContainer.fadeOut();
     },
 
     showSaveCancelBtn: function (event, ui) {
