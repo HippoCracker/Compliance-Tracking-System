@@ -1,3 +1,4 @@
+@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic');
 @import url("https://fonts.googleapis.com/css?family=Lato:400,700,400italic");
 
@@ -53,20 +54,8 @@ body {
 }
 
 
-/*
-#left-table-data {
-	position: fixed;
-	height: 100%;
-	min-width: 240px;
-	padding-top: 20px;
-	background: $lightgrey;
-	color: $darkgrey;
-}//left-table-data
-
-*/
-
 #body {
-	padding-top: 65px;
+	padding-top: 50px;
 }
 
 
@@ -349,13 +338,10 @@ strong {
 
 // =================================== Form ======================================
 .form-group {
+	span, 
+	input,
 	label {
 		font-size: 1rem;
-	}
-
-	span, 
-	input {
-		font-size: 1.2rem;
 	}
 
 	input,

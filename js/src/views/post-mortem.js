@@ -159,7 +159,7 @@
     hideStagesDetail: function (e) {
       var $btn = this.$showStagesDetailBtn;
       $btn.trigger('click');
-      $('#close-status-detail-container').css('top', -20);
+      $('#close-status-detail-container').css('top', -40);
     },
 
     openIncident: function (e) {

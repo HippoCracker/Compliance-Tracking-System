@@ -19,9 +19,6 @@
 	min-width: 800px;
 	background: $white;
 	border: none;
-	padding-top: 10px;
-	padding-right: 5px;
-	padding-bottom: 5px;
 	padding-left: 30px;
 	box-shadow: 0 0 8px rgba($black, .5);
 }
@@ -953,7 +950,7 @@ ul.tabs {
 
 .close-status-detail-container {
 	z-index: $page-title-z-index;
-	top: -20px;
+	top: -40px;
 	right: 30px;
 	height: 100px;
 
