@@ -21,7 +21,15 @@
 
       CCO: 10,
 
-      Distribution: 11
+      Distribution: 11,
+
+      ComplianceReviewForInitiator: 12,
+
+		  ComplianceReviewForLegal: 13, 
+
+		  ComplianceReviewForCCO: 14, 
+
+      ComplianceReviewForWorkingGroup: 15,
     },
 
     formatDate: function (date, format) {

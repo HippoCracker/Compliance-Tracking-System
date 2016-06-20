@@ -6,8 +6,9 @@
   '../utils/custom-tagit',
   '../utils/animation',
   './page-alert',
-  'text!templates/workflow-item-template.html'
-], function ($, _, Backbone, WorkflowsExistView, Tagit, Animation, PageAlert, WorkflowItemTemplate) {
+  'text!templates/workflow-item-template.html',
+  '../common'
+], function ($, _, Backbone, WorkflowsExistView, Tagit, Animation, PageAlert, WorkflowItemTemplate, common) {
 
   var WorkflowsView = Backbone.View.extend({
 
@@ -18,7 +19,8 @@
       'click #create-workflow-btn': 'createWorkflow',
       'click .list-group-item': 'displayWorkflowDetail',
       'click .disable-mask': 'showNotEditableWarning',
-      'change #workflowTypeDropdown': 'fetchWorkflowData',
+      'change #workflow-type-dropdown': 'fetchWorkflowData',
+      'change #workflow-order-dropdown': 'popoutWorkflowName'
 
     },
 
@@ -34,8 +36,8 @@
       this.$createWorkflowBtn   = this.$el.find('#create-workflow-btn');
       this.$alertThresholdDropdown = this.$el.find('#alert-threshold');
       this.$durationDropdown = this.$el.find('#workflow-duration');
-      this.$workflowDropdown = this.$el.find('#workflowTypeDropdown');
-      this.$orderDropDown = this.$el.find('#workflow-order');
+      this.$workflowDropdown = this.$el.find('#workflow-type-dropdown');
+      this.$orderDropDown = this.$el.find('#workflow-order-dropdown');
       this.$participantsNameInput = this.$el.find('#workflow-participants');
       this.$sliderContainer = this.$el.find('#slider-container');
 
@@ -76,15 +78,15 @@
     _getNewWorkflowData: function() {
       var
         incidentId = Backbone.incident.incidentId,
-        workflowTypeId = this.$workflowDropdown.val(),
-        workflowName = this.$workflowDropdown.find(":selected").text(),
+        workflowType = this.getWorkflowType(),
         duration = this.$durationDropdown.val(),
         alertThreshold = this.$alertThresholdDropdown.val(),
-        orderIndex = this.$orderDropDown.val();
-        participants = $('#workflow-participants').val();
+        orderIndex = this.$orderDropDown.val()
+        participants = $('#workflow-participants').val(),
+        workflowName = $('#workflow-name-input').val();
 
       return {
-        incidentId: incidentId, workflowTypeId: workflowTypeId, workflowName: workflowName, duration: duration,
+        incidentId: incidentId, workflowType: workflowType, workflowName: workflowName, duration: duration,
         alertThreshold: alertThreshold, participants: participants, orderIndex: orderIndex
       };
 
@@ -131,23 +133,31 @@
       }
     },
 
-    fetchWorkflowData: function () {
+    fetchWorkflowData: function (e) {
+      var selectedTag = $(e.target).find(':selected');
+      if (selectedTag.text().toLowerCase().indexOf('none') >= 0) {
+        this.$createWorkflowBtn.attr('disabled', 'true');
+        return;
+      } else {
+        this.$createWorkflowBtn.removeAttr('disabled');
+      }
+
       var
         participantsNameTagit = this.participantsNameTagit,
         updateDropdown = this.updateDropdown.bind(this),
         $durationDropdown = this.$durationDropdown,
         $alertThresholdDropdown = this.$alertThresholdDropdown,
         $orderDropDown = this.$orderDropDown,
-        selectedValue = Number(this.$workflowDropdown.val()),
+        workflowTypeId = this.getWorkflowType(),
         dropdownMax, duration, alertThreshold;
 
-      if (selectedValue !== -1) {
+      if (workflowTypeId > 0) {
         $.ajax({
-          url: Backbone.siteRootUrl + 'postmortem/getworkflowinfo',
+          url: Backbone.siteRootUrl + 'participant/getworkflowinfo',
           type: 'post',
           data: {
             incidentId: Backbone.incident.incidentId,
-            workflowTypeId: selectedValue
+            workflowType: workflowTypeId
           },
           success: function (result) {
             duration = result.duration;
@@ -163,7 +173,29 @@
           }
         });
 
+        this._popoutWorkflowName($(e.target).find(':selected'));
       }
+    },
+
+    getWorkflowType: function() {
+      var workflowName = this.$workflowDropdown.text(),
+          workflowTypeId = this.$workflowDropdown.val();
+
+      if (workflowName.toLowerCase().indexOf('compliance') >= 0) {
+        var orderIndex = this.$orderDropDown.val(),
+            previousWorkflowName = this._getPreviousWorkflowName(orderIndex).toLowerCase();
+        
+        if (previousWorkflowName === 'working group') {
+          workflowTypeId = common.WORKFLOW_TYPE.ComplianceReviewForWorkingGroup;
+        } else if (previousWorkflowName === 'legal') {
+          workflowTypeId = common.WORKFLOW_TYPE.ComplianceReviewForLegal;
+        } else if (previousWorkflowName === 'cco') {
+          workflowTypeId = common.WORKFLOW_TYPE.ComplianceReviewForCCO;
+        } else if (previousWorkflowName === 'initiator') {
+          workflowTypeId = common.WORKFLOW_TYPE.ComplianceReviewForInitiator;
+        }
+      } 
+      return Number(workflowTypeId);
     },
 
     updateDropdown: function (elem, max, select) {
@@ -175,6 +207,30 @@
       }
       $elem.val(select);
       $elem.removeAttr('disabled');
+    },
+
+    popoutWorkflowName: function() {
+      var selectedWorkflowTag = this.$workflowDropdown.find(':selected');
+      this._popoutWorkflowName(selectedWorkflowTag);
+    },
+
+    _popoutWorkflowName: function(elem) {
+      var name = $(elem).text(),
+          orderIndex, previousWorkflowName, previousWorkflowTag, titleTag;
+      if (name.toLowerCase().indexOf('compliance') >= 0) {
+        orderIndex = this.$orderDropDown.val();
+        previousWorkflowName = this._getPreviousWorkflowName(orderIndex);
+        if (previousWorkflowName.toLowerCase().indexOf('compliance') === -1) {
+          name += ' Review - ' + previousWorkflowName;
+        }
+      }
+      this.$el.find('#workflow-name-input').val(name);
+    },
+
+    _getPreviousWorkflowName: function(currentOrderIndex) {
+      previousWorkflowTag = this.$el.find('.list-group-item')[currentOrderIndex - 2];
+      titleTag = $(previousWorkflowTag).find('.list-group-item-heading');
+      return titleTag.text();
     },
 
     showNotEditableWarning: function () {
