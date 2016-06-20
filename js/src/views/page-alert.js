@@ -13,14 +13,18 @@
 
     },
 
-    render: function (statusClass, message) {
+    render: function (statusClass, message, duration) {
       var toggle = this.toggle.bind(this),
           toggleUp = _.partial(toggle, 'up');
+
+      if (typeof duration !== 'number') {
+        duration = 3000;
+      }
 
       this.$el.attr('class', 'page-level-alert ' + statusClass);
       this.$el.html(message);
       this.toggle(true);
-      setTimeout(toggleUp, 3000);
+      setTimeout(toggleUp, duration);
     },
 
     success: function(message) {
@@ -30,7 +34,7 @@
 
     error: function (message) {
       var statusClass = 'danger';
-      this.render(statusClass, message);
+      this.render(statusClass, message, 5000);
     },
 
     warning: function(message) {
