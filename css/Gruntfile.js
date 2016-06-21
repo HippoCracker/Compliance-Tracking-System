@@ -64,6 +64,13 @@ module.exports = function(grunt) {
       
 		},//concat
 
+		cssmin: {
+			target: {
+				files: {
+					'style-min.css': '../style.css'
+				}
+			}
+		}//cssmin
 
 	});//initConfig
 
