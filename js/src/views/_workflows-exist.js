@@ -39,7 +39,6 @@
         incidentId = Backbone.incident.incidentId,
         url = Backbone.siteRootUrl + common.CONTROLLER_ACTION.DeleteWorkflow,
         data = { incidentId: incidentId, orderIndex: orderIndex },
-        removeListTag = this.removeListTag.bind(this),
         refreshIndexAfterTag = this.refreshIndexAfterTag.bind(this);
 
       $.ajax({
@@ -49,8 +48,9 @@
         contentType: 'application/json; charset=utf-8',
       }).done(function (data) {
         PageAlert.success(data.workflowName + ' workflow has removed');
-        removeListTag($listItemTag);
+        Animation.toggleUp($listItemTag);
         refreshIndexAfterTag($listItemTag, -1);
+        $listItemTag.remove();
       }).fail(function (err) {
         PageAlert.error(err.message);
       });
@@ -70,11 +70,6 @@
 
       Animation.toggleDown(tag);
       this.refreshIndexAfterTag(tag, 1);
-    },
-
-    removeListTag: function (elem) {
-      Animation.toggleUp(elem);
-      setTimeout($(elem).remove, 2000);
     },
 
     refreshIndexAfterTag: function (listItemElem, increment) {
