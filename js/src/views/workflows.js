@@ -65,7 +65,7 @@
         $('#toggle-form-btn').trigger('click');
         addTag(workflowData);
       }).fail(function (err) {
-        PageAlert.error(err.message);
+        PageAlert.error(err.responseText);
       });
     },
 
@@ -220,7 +220,8 @@
       if (name.toLowerCase().indexOf('compliance') >= 0) {
         orderIndex = this.$orderDropDown.val();
         previousWorkflowName = this._getPreviousWorkflowName(orderIndex);
-        if (previousWorkflowName.toLowerCase().indexOf('compliance') === -1) {
+        if (previousWorkflowName.length > 0 &&
+            previousWorkflowName.toLowerCase().indexOf('compliance') === -1) {
           name += ' Review - ' + previousWorkflowName;
         }
       }

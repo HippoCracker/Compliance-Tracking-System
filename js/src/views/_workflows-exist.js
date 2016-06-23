@@ -60,10 +60,14 @@
       $elem = $(elem).css('display', 'none');
 
       var tagitOptions = this.tagitOptions;
-      var listItem = this.$el.find('.list-group-item')[order -1];
-      $(listItem).before($elem);
+      var workflows = this.$el.find('.workflows .list-group-item');
+      if (workflows.length > 0) {
+        $(workflows[order - 1]).before($elem);
+      } else {
+        $('.workflows').html($elem);
+      }
 
-      var tag = this.$el.find('.list-group-item')[order - 1];
+      var tag = this.$el.find('.workflows .list-group-item')[order - 1];
       $(tag).addClass('workflow-new');
       setTimeout(function () { $(tag).removeClass('workflow-new'); }, 5000);
       new Tagit($(tag).find('.participant-name-input'), tagitOptions);
