@@ -29,8 +29,16 @@
     initialize: function () {
       var emailService = this.model.emailService,
           data = this.model.data,
-          $participantsTableContainer = $('#current-stage-detail-template').find('.table-container'),
+          $participantsTableContainer,
           callback;
+
+      this.isRefreshAfterSend = this.model.data.isRefreshAfterSend;
+
+      if (this.model.data.isMoveWorkflow) {
+        $participantsTableContainer = $('#next-stage-detail-template').find('.table-container');
+      } else {
+        $participantsTableContainer = $('#current-stage-detail-template').find('.table-container');
+      }
 
       this.model = {};
       $participantsTableContainer.find('table').attr('class', 'checkbox-table');
@@ -72,6 +80,9 @@
 
     hidePopout: function () {
       this.$el.fadeOut('fast');
+      if (this.isRefreshAfterSend) {
+        this.refreshPage()
+      }
     },
 
     showPopout: function () {
@@ -98,9 +109,7 @@
     },
 
     insertInputToMail: function (e) {
-      var userInput = this.commentTextArea.value;
-      console.log(userInput);
-      this.userComments.innerHTML = userInput;
+      this.userComments.innerHTML = this.commentTextArea.value;
     },
 
     showCCInput: function (e) {
@@ -162,7 +171,21 @@
 
         this.emailService.send(incidentId, model, showResultFunc);
         this.hidePopout();
+        if (this.isRefreshAfterSend) {
+          this.refreshPage()
+        }
       }
+    },
+
+    refreshPage: function() {
+      var locationFacade = {
+        reload: window.navigate ?
+                window.navigate.bind(window, location.href) :
+                location.reload.bind(location)
+      };
+
+      setTimeout(locationFacade.reload, 2500);
+      PageAlert.success('Page refreshing');
     },
 
     toggleCheckboxes: function(e) {
