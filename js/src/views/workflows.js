@@ -55,6 +55,11 @@
       var workflowData = this._getNewWorkflowData(),
           addTag = this.addTag.bind(this);
 
+      if (workflowData.participants.length == 0) {
+        PageAlert.error("Please input Participants for new workflow");
+        return;
+      }
+
       $.ajax({
         type: 'post',
         url: Backbone.siteRootUrl + 'participant/CreatNewWorkflow',
@@ -160,8 +165,8 @@
             workflowType: workflowTypeId
           },
           success: function (result) {
-            duration = result.duration;
-            alertThreshold = result.alertThreshold;
+            duration = result.duration || 3;
+            alertThreshold = result.alertThreshold || 1;
             dropdownMax = duration + 10;
             participantsNameTagit.update(result.participants);
             updateDropdown($durationDropdown, dropdownMax, duration);
@@ -169,7 +174,7 @@
             $orderDropDown.removeAttr('disabled');
           },
           error: function (err) {
-            throw new Error(err.message);
+            PageAlert.error(err.responseText)
           }
         });
 
@@ -178,7 +183,7 @@
     },
 
     getWorkflowType: function() {
-      var workflowName = this.$workflowDropdown.text(),
+      var workflowName = this.$workflowDropdown.find(':selected').text(),
           workflowTypeId = this.$workflowDropdown.val();
 
       if (workflowName.toLowerCase().indexOf('compliance') >= 0) {
