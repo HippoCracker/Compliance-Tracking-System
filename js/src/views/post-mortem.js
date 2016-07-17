@@ -126,6 +126,8 @@
     },
 
     displayEmailPopout: function (e) {
+      delete this.emailPopout;
+
       var incidentId = Backbone.incident.incidentId,
           workflowTypeId = Backbone.incident.workflowTypeId,
           emailService, emailPopout;
