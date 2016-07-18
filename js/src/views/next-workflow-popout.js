@@ -55,12 +55,8 @@
     },
 
     sendReviewCompleteRequest: function (e) {
-      var successCallback = this.successReviewComplete.bind(this),
-          locationFacade = {
-            reload: window.navigate ?
-                    window.navigate.bind(window, location.href) :
-                    location.reload.bind(location)
-          }
+      var showReviewCompleteEmail = this.showReviewCompleteEmail.bind(this),
+          hidePopout = this.hidePopout.bind(this);
 
       $(e.target).attr('disabled', 'true');
 
@@ -71,11 +67,8 @@
         dataType: 'json',
         success: function (data) {
           PageAlert.success(data.message);
-          if (data.isMoveWorkflow) {
-            setTimeout(locationFacade.reload, 3500);
-          } else if(!data.isLastReviwer) {
-            successCallback(data);
-          }
+          hidePopout();
+          showReviewCompleteEmail(data);
         },
         error: function (err) {
           PageAlert.error("Error! " + err.responseText);
@@ -84,24 +77,30 @@
       });
     },
 
-    successReviewComplete: function (data) {
-      var incidentId = Backbone.incident.incidentId,
-          workflowTypeId = Backbone.incident.workflowTypeId,
-          emailService,
-          emailPopout;
-
+    showReviewCompleteEmail: function (data) {
+      delete this.emailPopout;
+      
       this.hidePopout();
 
-      emailService = new EmailService('email', 'ComposeReviewCompleteEmail');
-      emailPopout= new EmailPopoutView({
-            model: {
-              emailService: emailService,
-              data: {
-                incidentId: incidentId,
-                workflowType: workflowTypeId
-              }
-            }
-          });
+      var emailService, emailPopout;
+
+      if (data.isMoveWorkflow) {
+        emailService = new EmailService('email', 'ComposeWorkflowStateChangeEmail');
+      } else {
+        emailService = new EmailService('email', 'ComposeReviewCompleteEmail');
+      }
+
+      this.emailPopout= new EmailPopoutView({
+        model: {
+          emailService: emailService,
+          data: {
+            incidentId: data.incidentId,
+            workflowType: data.workflowType,
+            isMoveWorkflow: data.isMoveWorkflow,
+            isRefreshAfterSend: true,
+          }
+        }
+      });
     }
   });
 
